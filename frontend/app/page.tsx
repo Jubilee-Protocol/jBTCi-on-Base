@@ -288,7 +288,7 @@ export default function Home() {
                         {/* Input Section */}
                         <div className="p-5 space-y-4">
                             {/* You deposit */}
-                            <div className="bg-[#1a1a1a] rounded-xl p-4">
+                            <div className="bg-[#1a1a1a] rounded-2xl p-5">
                                 <div className="flex justify-between text-sm text-gray-500 mb-3">
                                     <span>{activeTab === 'deposit' ? 'You deposit' : 'You withdraw'}</span>
                                     <span>Balance: <span className="text-white">{userBalance ? parseFloat(formatUnits(userBalance, 8)).toFixed(4) : '0.00'}</span></span>
@@ -309,7 +309,7 @@ export default function Home() {
                                         >
                                             Max
                                         </button>
-                                        <div className="flex items-center gap-1.5 bg-blue-500/20 rounded-full px-3 py-1.5">
+                                        <div className="flex items-center gap-2 bg-blue-500/20 rounded-xl px-4 py-2">
                                             <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
                                                 <span className="text-white text-[10px] font-bold">cb</span>
                                             </div>
@@ -331,11 +331,11 @@ export default function Home() {
                             </div>
 
                             {/* You receive */}
-                            <div className="bg-[#1a1a1a] rounded-xl p-4">
+                            <div className="bg-[#1a1a1a] rounded-2xl p-5">
                                 <div className="text-sm text-gray-500 mb-3">You receive</div>
                                 <div className="flex items-center justify-between">
                                     <span className="text-3xl font-medium text-white">{depositAmount || '0'}</span>
-                                    <div className="flex items-center gap-1.5 bg-pink-500/20 rounded-full px-3 py-1.5">
+                                    <div className="flex items-center gap-2 bg-pink-500/20 rounded-xl px-4 py-2">
                                         <Image src="/jubilee-logo.png" alt="jBTCi" width={20} height={20} />
                                         <span className="text-white text-sm font-medium">jBTCi</span>
                                     </div>
@@ -356,7 +356,7 @@ export default function Home() {
                                     : 'bg-gray-800 text-gray-500 cursor-not-allowed'
                                     }`}
                             >
-                                {depositAmount && parseFloat(depositAmount) > 0 ? 'Enter an amount' : 'Enter an amount'}
+                                {depositAmount && parseFloat(depositAmount) > 0 ? (activeTab === 'deposit' ? 'Deposit cbBTC' : 'Withdraw jBTCi') : 'Enter an amount'}
                             </button>
                         </div>
                     </div>
