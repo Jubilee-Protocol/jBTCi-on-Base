@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Brand Colors */
+  --jubilee-pink: #F377BB;
+  --jubilee-orange: #F97316;
+  --jubilee-yellow: #EAB308;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Dark theme base */
+body {
+  background: #0a0a0a;
+  color: #ffffff;
+  min-height: 100vh;
+}
+
+/* RainbowKit button overrides */
+[data-rk] button {
+  font-family: 'Inter', sans-serif !important;
+}
+
+/* Input styling */
+input[type="number"],
+input[type="text"] {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid #374151;
+  border-radius: 12px;
+  font-size: 1.25rem;
+  font-family: 'Inter', sans-serif;
+  background: #111827;
+  color: white;
+  transition: border-color 0.2s;
+}
+
+input:focus {
+  outline: none;
+  border-color: #F97316;
+}
+
+input::placeholder {
+  color: #6b7280;
+}
+
+/* Hide number input spinners */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Animation for logo */
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 30px rgba(249, 115, 22, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 0 50px rgba(249, 115, 22, 0.5);
+  }
+}
+
+.logo-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Selection color */
+::selection {
+  background: rgba(249, 115, 22, 0.3);
+  color: white;
+}

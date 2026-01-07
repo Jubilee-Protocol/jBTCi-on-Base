@@ -1,0 +1,48 @@
+{
+  "name": "jubilee-protocol",
+  "version": "0.1.0",
+  "description": "Jubilee Bitcoin Index (jBTCi) - MVP on zkSync Era",
+  "main": "index.js",
+  "scripts": {
+    "compile": "hardhat compile --network zksyncSepolia",
+    "test": "hardhat test --network zksyncSepolia",
+    "deploy:sepolia": "hardhat run deploy/deploy.ts --network zksyncSepolia",
+    "deploy:mainnet": "hardhat run deploy/deploy.ts --network zksyncMainnet",
+    "interact": "node scripts/interact-vault.js",
+    "test:quicknode": "node scripts/test-quicknode.js"
+  },
+  "keywords": [
+    "jubilee",
+    "bitcoin",
+    "defi",
+    "zksync",
+    "vault",
+    "erc4626"
+  ],
+  "author": "Hundredfold Foundation",
+  "license": "MIT",
+  "devDependencies": {
+    "@matterlabs/hardhat-zksync-deploy": "^1.8.0",
+    "@matterlabs/hardhat-zksync-solc": "^1.5.1",
+    "@nomicfoundation/hardhat-verify": "^2.1.3",
+    "@openzeppelin/hardhat-upgrades": "^2.0.0",
+    "@types/chai": "^4.3.11",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.10.6",
+    "chai": "^4.3.10",
+    "hardhat": "^2.19.4",
+    "hardhat-typechain": "^0.3.5",
+    "typescript": "^5.3.3",
+    "zksync-ethers": "^6.21.0",
+    "zksync-web3": "^0.14.4"
+  },
+  "dependencies": {
+    "@chainlink/contracts": "^0.8.0",
+    "@openzeppelin/contracts": "^5.0.0",
+    "@openzeppelin/contracts-upgradeable": "^5.4.0",
+    "dotenv": "^16.3.1",
+    "ethers": "^6.10.0",
+    "hardhat-preprocessor": "^0.1.5",
+    "yearn_base_strategy": "github:yearn/tokenized-strategy"
+  }
+}
