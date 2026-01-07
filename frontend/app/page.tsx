@@ -9,7 +9,7 @@ import { CONTRACTS } from '../config';
 
 // BTC price constant (Jan 2026)
 const BTC_PRICE_USD = 98500;
-const MIN_DEPOSIT_BTC = 0.001;
+const MIN_DEPOSIT_BTC = 0.01; // Contract minPositionSize
 
 // Strategy ABI
 const STRATEGY_ABI = [
@@ -186,7 +186,7 @@ export default function Home() {
                                             const connectBtn = document.querySelector('[data-testid="rk-connect-button"]') as HTMLButtonElement;
                                             if (connectBtn) connectBtn.click();
                                         }}
-                                        className="px-8 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-full transition-all hover:scale-105"
+                                        className="px-8 py-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold rounded-xl transition-all shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40"
                                     >
                                         Connect Wallet
                                     </button>
