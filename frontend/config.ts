@@ -4,7 +4,7 @@ import { getDefaultConfig } from '@rainbow-me/rainbowkit'
 
 export const config = getDefaultConfig({
     appName: 'jBTCi - Jubilee Bitcoin Index',
-    projectId: 'YOUR_WALLETCONNECT_PROJECT_ID', // Get from cloud.walletconnect.com
+    projectId: '6f385306b6aa92e6c664d8e5759748c2',
     chains: [base, baseSepolia],
     transports: {
         [base.id]: http('https://mainnet.base.org'),
