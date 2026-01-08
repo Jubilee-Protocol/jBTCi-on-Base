@@ -378,7 +378,7 @@ export default function Home() {
                     abi: ERC20_ABI,
                     functionName: 'approve',
                     args: [strategyAddress, amountWei],
-                });
+                } as any);
                 return;
             }
 
@@ -388,7 +388,7 @@ export default function Home() {
                 abi: STRATEGY_ABI,
                 functionName: 'deposit',
                 args: [amountWei, address],
-            });
+            } as any);
         } catch (error: unknown) {
             const errorMessage = error instanceof Error ? error.message : 'Transaction failed';
             setToast({ message: errorMessage, type: 'error' });
@@ -407,7 +407,7 @@ export default function Home() {
                 abi: STRATEGY_ABI,
                 functionName: 'redeem',
                 args: [sharesWei, address, address],
-            });
+            } as any);
         } catch (error: unknown) {
             const errorMessage = error instanceof Error ? error.message : 'Transaction failed';
             setToast({ message: errorMessage, type: 'error' });
