@@ -158,7 +158,7 @@ export default function Home() {
                     <Image src="/jubilee-logo.png" alt="Jubilee" width={28} height={28} />
                     <span className="text-xl font-bold text-[#3B3B3B]">jBTCi</span>
                 </div>
-                <ConnectButton showBalance={false} chainStatus="none" accountStatus="address" />
+                <ConnectButton />
             </header>
 
             {/* Main Content */}
