@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount, useReadContract, useChainId } from 'wagmi';
 import { useState } from 'react';
@@ -152,44 +153,40 @@ export default function Home() {
     return (
         <main className="bg-vignette min-h-screen flex flex-col">
             {/* Header */}
-            <header className="px-6 py-4 flex justify-between items-center">
-                <div className="flex items-center gap-2">
+            <header className="px-6 py-5 flex justify-between items-center">
+                <div className="flex items-center gap-3">
+                    <Image src="/jubilee-logo.png" alt="Jubilee" width={28} height={28} />
                     <span className="text-xl font-bold text-[#3B3B3B]">jBTCi</span>
                 </div>
-                <div className="flex items-center gap-3">
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${isMainnet ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
-                        {isMainnet ? 'Base' : 'Testnet'}
-                    </span>
-                    <ConnectButton />
-                </div>
+                <ConnectButton showBalance={false} chainStatus="none" accountStatus="address" />
             </header>
 
             {/* Main Content */}
-            <div className="flex-1 flex items-center justify-center px-4 py-12">
-                <div className="w-full max-w-[440px]">
+            <div className="flex-1 flex items-center justify-center px-6 py-12">
+                <div className="w-full max-w-[480px]">
                     {/* Card */}
-                    <div className="card p-6">
+                    <div className="bg-white rounded-2xl p-8 shadow-lg border border-blue-100">
                         {/* Tabs */}
-                        <div className="flex gap-6 mb-6 border-b border-gray-200 pb-3">
+                        <div className="flex gap-8 mb-8 border-b border-gray-200 pb-4">
                             <button
                                 onClick={() => setActiveTab('deposit')}
-                                className={`font-semibold transition-colors ${activeTab === 'deposit' ? 'text-blue-primary' : 'text-gray-400 hover:text-gray-600'}`}
+                                className={`text-lg font-semibold transition-colors ${activeTab === 'deposit' ? 'text-blue-primary' : 'text-gray-400 hover:text-gray-600'}`}
                             >
                                 Deposit
                             </button>
                             <button
                                 onClick={() => setActiveTab('withdraw')}
-                                className={`font-semibold transition-colors ${activeTab === 'withdraw' ? 'text-blue-primary' : 'text-gray-400 hover:text-gray-600'}`}
+                                className={`text-lg font-semibold transition-colors ${activeTab === 'withdraw' ? 'text-blue-primary' : 'text-gray-400 hover:text-gray-600'}`}
                             >
                                 Withdraw
                             </button>
                         </div>
 
                         {/* Input Section */}
-                        <div className="space-y-4">
+                        <div className="space-y-6">
                             {/* You deposit */}
-                            <div className="bg-gray-50 rounded-xl p-4">
-                                <div className="flex justify-between text-sm text-gray-500 mb-2">
+                            <div className="bg-gray-50 rounded-2xl p-5">
+                                <div className="flex justify-between text-sm text-gray-500 mb-4">
                                     <span>{activeTab === 'deposit' ? 'You deposit' : 'You withdraw'}</span>
                                     <span>Balance: <span className="text-[#3B3B3B] font-medium">{userBalance ? parseFloat(formatUnits(userBalance, 8)).toFixed(4) : '0.00'}</span></span>
                                 </div>
@@ -217,13 +214,13 @@ export default function Home() {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="text-sm text-gray-400 mt-1">≈ ${depositUsdValue.toLocaleString()}</div>
+                                <div className="text-sm text-gray-400 mt-3">≈ ${depositUsdValue.toLocaleString()}</div>
                             </div>
 
                             {/* Arrow */}
-                            <div className="flex justify-center">
-                                <div className="bg-white border border-gray-200 rounded-full p-2 shadow-sm">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3B3B3B" strokeWidth="2">
+                            <div className="flex justify-center -my-1">
+                                <div className="bg-white border border-gray-200 rounded-full p-3 shadow-sm">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3B3B3B" strokeWidth="2">
                                         <line x1="12" y1="5" x2="12" y2="19" />
                                         <polyline points="19 12 12 19 5 12" />
                                     </svg>
@@ -231,29 +228,29 @@ export default function Home() {
                             </div>
 
                             {/* You receive */}
-                            <div className="bg-gray-50 rounded-xl p-4">
-                                <div className="text-sm text-gray-500 mb-2">You receive</div>
+                            <div className="bg-gray-50 rounded-2xl p-5">
+                                <div className="text-sm text-gray-500 mb-4">You receive</div>
                                 <div className="flex items-center justify-between">
                                     <span className="text-3xl font-semibold text-[#3B3B3B]">{depositAmount || '0'}</span>
-                                    <div className="flex items-center gap-1.5 bg-orange-100 rounded-full px-3 py-1.5">
-                                        <div className="w-5 h-5 bg-[#FFA500] rounded-full flex items-center justify-center">
-                                            <span className="text-white text-[9px] font-bold">j</span>
+                                    <div className="flex items-center gap-2 bg-orange-100 rounded-full px-4 py-2">
+                                        <div className="w-6 h-6 bg-[#FFA500] rounded-full flex items-center justify-center">
+                                            <span className="text-white text-[10px] font-bold">j</span>
                                         </div>
                                         <span className="text-[#3B3B3B] text-sm font-medium">jBTCi</span>
                                     </div>
                                 </div>
-                                <div className="text-sm text-gray-400 mt-1">1 cbBTC = 1 jBTCi share</div>
+                                <div className="text-sm text-gray-400 mt-3">1 cbBTC = 1 jBTCi share</div>
                             </div>
 
                             {/* Min deposit notice */}
-                            <div className="flex justify-between text-xs text-gray-400 px-1">
+                            <div className="flex justify-between text-xs text-gray-400 px-2 mt-2">
                                 <span>Min. deposit: {MIN_DEPOSIT_BTC} BTC</span>
                                 <span>≈ ${(MIN_DEPOSIT_BTC * BTC_PRICE_USD).toFixed(0)}</span>
                             </div>
 
                             {/* Action Button */}
                             <button
-                                className={`w-full py-4 rounded-full text-lg font-semibold transition-all ${depositAmount && parseFloat(depositAmount) > 0
+                                className={`w-full py-4 mt-2 rounded-full text-lg font-semibold transition-all ${depositAmount && parseFloat(depositAmount) > 0
                                     ? 'btn-blue'
                                     : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                                     }`}
