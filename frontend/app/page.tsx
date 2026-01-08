@@ -101,7 +101,7 @@ const gradientStyle = {
     minHeight: '100vh'
 };
 
-// Toast component
+// Toast component - mobile responsive
 function Toast({ message, type, onClose }: { message: string; type: 'success' | 'error' | 'pending'; onClose: () => void }) {
     useEffect(() => {
         if (type !== 'pending') {
@@ -115,18 +115,18 @@ function Toast({ message, type, onClose }: { message: string; type: 'success' | 
     return (
         <div style={{
             position: 'fixed',
-            bottom: '24px',
-            right: '24px',
+            bottom: '16px',
+            left: '16px',
+            right: '16px',
             background: bgColor,
             color: 'white',
-            padding: '16px 24px',
+            padding: '14px 20px',
             borderRadius: '12px',
             boxShadow: '0 10px 40px rgba(0,0,0,0.2)',
             display: 'flex',
             alignItems: 'center',
             gap: '12px',
             zIndex: 9999,
-            maxWidth: '400px',
             animation: 'slideIn 0.3s ease'
         }}>
             {type === 'pending' && (
@@ -136,14 +136,15 @@ function Toast({ message, type, onClose }: { message: string; type: 'success' | 
                     border: '2px solid white',
                     borderTopColor: 'transparent',
                     borderRadius: '50%',
-                    animation: 'spin 1s linear infinite'
+                    animation: 'spin 1s linear infinite',
+                    flexShrink: 0
                 }} />
             )}
             {type === 'success' && <span>✓</span>}
             {type === 'error' && <span>✕</span>}
-            <span style={{ flex: 1 }}>{message}</span>
+            <span style={{ flex: 1, fontSize: '14px' }}>{message}</span>
             {type !== 'pending' && (
-                <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer', fontSize: '18px' }}>×</button>
+                <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer', fontSize: '18px', padding: '4px' }}>×</button>
             )}
         </div>
     );

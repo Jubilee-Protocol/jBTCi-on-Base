@@ -136,3 +136,83 @@ input[type="number"]::-webkit-outer-spin-button {
     width: 100%;
   }
 }
+
+/* Mobile responsive - comprehensive styles */
+@media (max-width: 480px) {
+
+  /* Reduce card padding on mobile */
+  .card,
+  .bg-white {
+    padding: 16px !important;
+  }
+
+  /* Smaller font sizes */
+  h1 {
+    font-size: 1.5rem !important;
+  }
+
+  /* Stats grid - 2 columns on mobile */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Smaller buttons */
+  .btn-blue {
+    padding: 10px 24px;
+    font-size: 14px;
+  }
+
+  /* Adjust input sizes */
+  input[type="text"],
+  input[type="number"] {
+    font-size: 1.5rem !important;
+  }
+
+  /* Toast positioning for mobile */
+  .toast-mobile {
+    left: 16px !important;
+    right: 16px !important;
+    bottom: 16px !important;
+    max-width: none !important;
+  }
+}
+
+/* Animation keyframes */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* Viewport meta for mobile */
+@media screen and (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+
+  body {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
