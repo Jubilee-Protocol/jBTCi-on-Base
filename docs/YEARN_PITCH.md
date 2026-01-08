@@ -1,6 +1,6 @@
 # Yearn Partnership Pitch: jBTCi Strategy
 
-## 🪙 What is jBTCi?
+## What is jBTCi?
 
 **jBTCi (Jubilee Bitcoin Index)** is a tokenized Bitcoin index fund that maintains a diversified 50/50 allocation between **WBTC** and **cbBTC** on Base L2.
 
