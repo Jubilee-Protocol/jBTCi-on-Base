@@ -276,14 +276,8 @@ export default function Home() {
         return () => clearInterval(interval);
     }, []);
 
-    // Check localStorage for terms acceptance
-    useEffect(() => {
-        const accepted = localStorage.getItem('jbtci-terms-accepted');
-        if (accepted === 'true') {
-            setHasAcceptedTerms(true);
-            setShowTermsModal(false);
-        }
-    }, []);
+    // Terms shown every session - no localStorage persistence
+    // This ensures users always see and accept terms on each visit
 
     // Handle transaction success toasts and history
     useEffect(() => {
@@ -309,7 +303,7 @@ export default function Home() {
     }, [isApproveSuccess]);
 
     const handleAcceptTerms = () => {
-        localStorage.setItem('jbtci-terms-accepted', 'true');
+        // Session-only acceptance - terms show on every new visit
         setHasAcceptedTerms(true);
         setShowTermsModal(false);
     };
@@ -908,7 +902,7 @@ export default function Home() {
                         )}
 
                         {/* Status & Links */}
-                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '24px', marginTop: '20px', fontSize: '14px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px', marginTop: '20px', fontSize: '14px', flexWrap: 'wrap' }}>
                             <span style={{ color: strategyStatus?.isPaused ? '#EF4444' : '#22C55E' }}>
                                 ● {strategyStatus?.isPaused ? 'Paused' : 'Active'}
                             </span>
@@ -917,6 +911,12 @@ export default function Home() {
                             </a>
                             <a href="https://github.com/Jubilee-Protocol/jBTCi-on-Base/blob/main/docs/AUDIT_REPORT.md" target="_blank" rel="noopener noreferrer" style={{ color: c.textLight }}>
                                 Audit ↗
+                            </a>
+                            <a href="https://github.com/Jubilee-Protocol/jBTCi-on-Base/blob/main/docs/FAQ.md" target="_blank" rel="noopener noreferrer" style={{ color: c.textLight }}>
+                                FAQ ↗
+                            </a>
+                            <a href="https://github.com/Jubilee-Protocol/jBTCi-on-Base#readme" target="_blank" rel="noopener noreferrer" style={{ color: c.textLight }}>
+                                Learn More ↗
                             </a>
                         </div>
                     </div>
