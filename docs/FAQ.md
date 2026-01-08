@@ -10,7 +10,7 @@ When you deposit cbBTC, you receive jBTCi tokens representing your share of the 
 The minimum deposit is 0.01 BTC.
 
 ## What is the deposit cap?
-The current deposit cap is **1 BTC** as we launch in a controlled manner to ensure security and stability. As the protocol matures and undergoes additional auditing, we will progressively increase the cap toward our maximum of **1,000 BTC**. Cap increases will be announced on our Discord and Twitter.
+The current deposit cap is **50 BTC** as we launch in a controlled manner to ensure security and stability. As the protocol matures and undergoes additional auditing, we will progressively increase the cap toward our maximum of **1,000 BTC**. Cap increases will be announced on our Discord and Twitter.
 
 ## What are the fees?
 - **Performance Fee**: 10% of profits only
