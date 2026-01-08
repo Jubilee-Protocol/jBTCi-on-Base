@@ -203,6 +203,7 @@ export default function Home() {
     const [activeTab, setActiveTab] = useState<'deposit' | 'withdraw'>('deposit');
     const [hasAcceptedTerms, setHasAcceptedTerms] = useState(false);
     const [showTermsModal, setShowTermsModal] = useState(true);
+    const [rememberDevice, setRememberDevice] = useState(false);
     const [btcPrice, setBtcPrice] = useState(91000);
     const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'pending' } | null>(null);
     const [theme, setTheme] = useState<Theme>('light');
@@ -276,8 +277,14 @@ export default function Home() {
         return () => clearInterval(interval);
     }, []);
 
-    // Terms shown every session - no localStorage persistence
-    // This ensures users always see and accept terms on each visit
+    // Check localStorage for remembered terms acceptance
+    useEffect(() => {
+        const remembered = localStorage.getItem('jbtci-terms-remembered');
+        if (remembered === 'true') {
+            setHasAcceptedTerms(true);
+            setShowTermsModal(false);
+        }
+    }, []);
 
     // Handle transaction success toasts and history
     useEffect(() => {
@@ -303,7 +310,9 @@ export default function Home() {
     }, [isApproveSuccess]);
 
     const handleAcceptTerms = () => {
-        // Session-only acceptance - terms show on every new visit
+        if (rememberDevice) {
+            localStorage.setItem('jbtci-terms-remembered', 'true');
+        }
         setHasAcceptedTerms(true);
         setShowTermsModal(false);
     };
@@ -488,6 +497,31 @@ export default function Home() {
                             <strong style={{ color: '#FFA500' }}>(e)</strong> This is not financial, legal, or tax advice. You are solely responsible for your own investment decisions and due diligence.
                         </p>
                     </div>
+
+                    {/* Remember Device Checkbox */}
+                    <label style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '8px',
+                        marginBottom: '16px',
+                        cursor: 'pointer',
+                        fontSize: '14px',
+                        color: '#6B7280'
+                    }}>
+                        <input
+                            type="checkbox"
+                            checked={rememberDevice}
+                            onChange={(e) => setRememberDevice(e.target.checked)}
+                            style={{
+                                width: '18px',
+                                height: '18px',
+                                accentColor: '#0052FF',
+                                cursor: 'pointer'
+                            }}
+                        />
+                        Remember this device
+                    </label>
 
                     <button
                         onClick={handleAcceptTerms}
@@ -917,6 +951,28 @@ export default function Home() {
                             </a>
                             <a href="https://github.com/Jubilee-Protocol/jBTCi-on-Base#readme" target="_blank" rel="noopener noreferrer" style={{ color: c.textLight }}>
                                 Learn More ↗
+                            </a>
+                            <a
+                                href="https://discord.gg/yBhdxtMB"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                title="Need help? Join our Discord"
+                                style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    width: '24px',
+                                    height: '24px',
+                                    borderRadius: '50%',
+                                    background: 'linear-gradient(135deg, #5865F2 0%, #4752C4 100%)',
+                                    color: 'white',
+                                    fontSize: '14px',
+                                    fontWeight: '700',
+                                    textDecoration: 'none',
+                                    marginLeft: '4px'
+                                }}
+                            >
+                                ?
                             </a>
                         </div>
                     </div>

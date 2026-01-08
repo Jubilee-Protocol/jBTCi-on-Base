@@ -7,7 +7,7 @@ jBTCi is the first Bitcoin Index Fund on Base, providing diversified BTC exposur
 When you deposit cbBTC, you receive jBTCi tokens representing your share of the index fund. The fund automatically rebalances between cbBTC and WBTC to optimize returns.
 
 ## What is the minimum deposit?
-The minimum deposit is 0.01 BTC (approximately $910 at current prices).
+The minimum deposit is 0.01 BTC.
 
 ## What are the fees?
 - **Performance Fee**: 10% of profits only
