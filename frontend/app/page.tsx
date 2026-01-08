@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount, useReadContract, useChainId } from 'wagmi';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { formatUnits } from 'viem';
 import { CONTRACTS } from '../config';
 
@@ -66,6 +66,23 @@ export default function Home() {
     const chainId = useChainId();
     const [depositAmount, setDepositAmount] = useState('');
     const [activeTab, setActiveTab] = useState<'deposit' | 'withdraw'>('deposit');
+    const [hasAcceptedTerms, setHasAcceptedTerms] = useState(false);
+    const [showTermsModal, setShowTermsModal] = useState(true);
+
+    // Check localStorage for terms acceptance
+    useEffect(() => {
+        const accepted = localStorage.getItem('jbtci-terms-accepted');
+        if (accepted === 'true') {
+            setHasAcceptedTerms(true);
+            setShowTermsModal(false);
+        }
+    }, []);
+
+    const handleAcceptTerms = () => {
+        localStorage.setItem('jbtci-terms-accepted', 'true');
+        setHasAcceptedTerms(true);
+        setShowTermsModal(false);
+    };
 
     const isMainnet = chainId === 8453;
     const contracts = isMainnet ? CONTRACTS.mainnet : CONTRACTS.testnet;
@@ -89,6 +106,88 @@ export default function Home() {
     const cbbtcPercent = strategyStatus ? Number(strategyStatus.cbbtcAlloc) / 100 : 50;
     const totalHoldings = strategyStatus ? Number(formatUnits(strategyStatus.totalHoldings, 8)) : 0;
     const depositUsdValue = (parseFloat(depositAmount || '0') * BTC_PRICE_USD);
+
+    // Terms Modal
+    if (showTermsModal && !hasAcceptedTerms) {
+        return (
+            <div style={{
+                position: 'fixed',
+                inset: 0,
+                background: 'rgba(0, 0, 0, 0.85)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 9999,
+                padding: '20px'
+            }}>
+                <div style={{
+                    background: '#1a1a2e',
+                    borderRadius: '16px',
+                    maxWidth: '600px',
+                    width: '100%',
+                    padding: '32px',
+                    color: 'white'
+                }}>
+                    <h2 style={{ fontSize: '24px', fontWeight: 'bold', textAlign: 'center', marginBottom: '24px' }}>
+                        Disclaimer
+                    </h2>
+
+                    <div style={{
+                        background: '#0d0d1a',
+                        borderRadius: '12px',
+                        padding: '24px',
+                        marginBottom: '24px',
+                        maxHeight: '400px',
+                        overflowY: 'auto',
+                        fontSize: '14px',
+                        lineHeight: '1.6',
+                        color: '#a0a0a0'
+                    }}>
+                        <p style={{ marginBottom: '16px' }}>
+                            IN ACCESSING AND/OR USING jBTCi PROTOCOL, YOU ACKNOWLEDGE AND AGREE THAT:
+                        </p>
+
+                        <p style={{ marginBottom: '16px' }}>
+                            (a) jBTCi PROTOCOL IS/ARE PROVIDED ON AN "AS-IS" AND "AS AVAILABLE" BASIS, AND JUBILEE LABS ("OPERATOR") AND ITS AFFILIATES (SAVE TO THE EXTENT PROHIBITED BY APPLICABLE LAWS) EXPRESSLY DISCLAIM ANY AND ALL REPRESENTATIONS, WARRANTIES AND/OR CONDITIONS OF ANY KIND IN RESPECT THEREOF, WHETHER EXPRESS, IMPLIED, OR STATUTORY, INCLUDING ALL WARRANTIES OR CONDITIONS OF MERCHANTABILITY, MERCHANTABLE QUALITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, QUIET ENJOYMENT, ACCURACY, OR NON-INFRINGEMENT.
+                        </p>
+
+                        <p style={{ marginBottom: '16px' }}>
+                            (b) OPERATOR AND ITS AFFILIATES HAS NOT MADE AND MAKES NO REPRESENTATION, WARRANTY AND/OR CONDITION OF ANY KIND THAT jBTCi PROTOCOL WILL MEET YOUR REQUIREMENTS, OR WILL BE AVAILABLE ON AN UNINTERRUPTED, TIMELY, SECURE, OR ERROR-FREE BASIS, OR WILL BE ACCURATE, RELIABLE, FREE OF VIRUSES OR OTHER HARMFUL CODE, COMPLETE, LEGAL, OR SAFE.
+                        </p>
+
+                        <p style={{ marginBottom: '16px' }}>
+                            (c) YOU SHALL HAVE NO CLAIM AGAINST OPERATOR AND/OR ITS AFFILIATES IN RESPECT OF ANY LOSS SUFFERED BY YOU IN RELATION TO OR ARISING FROM YOUR ACCESS AND/OR USE OF jBTCi PROTOCOL.
+                        </p>
+
+                        <p style={{ marginBottom: '16px' }}>
+                            (d) YOU UNDERSTAND THAT DeFi PROTOCOLS INVOLVE SIGNIFICANT RISKS INCLUDING BUT NOT LIMITED TO: SMART CONTRACT VULNERABILITIES, MARKET VOLATILITY, IMPERMANENT LOSS, ORACLE FAILURES, AND POTENTIAL LOSS OF ALL DEPOSITED FUNDS.
+                        </p>
+
+                        <p>
+                            (e) THIS IS NOT FINANCIAL ADVICE. YOU ARE SOLELY RESPONSIBLE FOR YOUR OWN INVESTMENT DECISIONS.
+                        </p>
+                    </div>
+
+                    <button
+                        onClick={handleAcceptTerms}
+                        style={{
+                            width: '100%',
+                            padding: '16px',
+                            background: '#0052FF',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '12px',
+                            fontSize: '18px',
+                            fontWeight: '600',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        Accept
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <main style={gradientStyle} className="flex flex-col">
@@ -268,27 +367,12 @@ export default function Home() {
                             Audit ↗
                         </a>
                     </div>
-
-                    {/* Risk Disclaimer */}
-                    <div className="mt-8 p-4 bg-orange-50 border border-orange-200 rounded-xl">
-                        <p className="text-xs text-orange-700 text-center leading-relaxed">
-                            <strong>⚠️ Risk Disclosure:</strong> jBTCi is an experimental DeFi protocol. By using this application, you acknowledge the risks of smart contract vulnerabilities, market volatility, and potential loss of funds. This is not financial advice. Use at your own risk.
-                        </p>
-                    </div>
                 </div>
             </div>
 
             {/* Footer */}
-            <footer style={{ padding: '24px', textAlign: 'center', fontSize: '14px' }}>
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '24px', color: '#9CA3AF' }}>
-                    <span>2026 © Jubilee Labs</span>
-                    <a href="https://github.com/Jubilee-Protocol/jBTCi-on-Base/blob/main/docs/AUDIT_REPORT.md" target="_blank" rel="noopener noreferrer">
-                        Audit Report
-                    </a>
-                    <a href="https://github.com/Jubilee-Protocol/jBTCi-on-Base" target="_blank" rel="noopener noreferrer">
-                        GitHub
-                    </a>
-                </div>
+            <footer style={{ padding: '24px', textAlign: 'center', fontSize: '14px', color: '#9CA3AF' }}>
+                2026 © Jubilee Labs
             </footer>
         </main>
     );
