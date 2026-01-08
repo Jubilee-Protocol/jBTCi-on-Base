@@ -34,7 +34,7 @@
 
 ## 🔒 Security
 
-**Audit Score: 94/100** ⭐⭐⭐⭐⭐
+**Audit Score: 97/100** ⭐⭐⭐⭐⭐
 
 | Category | Score |
 |----------|-------|
