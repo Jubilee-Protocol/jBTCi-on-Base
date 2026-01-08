@@ -226,14 +226,17 @@ export default function Home() {
                                 <div className="text-sm text-gray-400 mt-3">≈ ${depositUsdValue.toLocaleString()}</div>
                             </div>
 
-                            {/* Arrow */}
+                            {/* Arrow - Click to toggle */}
                             <div className="flex justify-center -my-1">
-                                <div className="bg-white border border-gray-200 rounded-full p-3 shadow-sm">
+                                <button
+                                    onClick={() => setActiveTab(activeTab === 'deposit' ? 'withdraw' : 'deposit')}
+                                    className="bg-white border border-gray-200 rounded-full p-3 shadow-sm hover:bg-gray-50 hover:border-gray-300 transition-all cursor-pointer"
+                                >
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3B3B3B" strokeWidth="2">
                                         <line x1="12" y1="5" x2="12" y2="19" />
                                         <polyline points="19 12 12 19 5 12" />
                                     </svg>
-                                </div>
+                                </button>
                             </div>
 
                             {/* Output Token (jBTCi for deposit, cbBTC for withdraw) */}
@@ -273,7 +276,7 @@ export default function Home() {
                                     : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                                     }`}
                             >
-                                {depositAmount && parseFloat(depositAmount) > 0 ? (activeTab === 'deposit' ? 'Deposit cbBTC' : 'Withdraw jBTCi') : 'Enter an amount'}
+                                {depositAmount && parseFloat(depositAmount) > 0 ? (activeTab === 'deposit' ? 'Deposit cbBTC' : 'Withdraw cbBTC') : 'Enter an amount'}
                             </button>
                         </div>
                     </div>
