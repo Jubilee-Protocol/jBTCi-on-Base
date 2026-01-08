@@ -9,6 +9,9 @@ When you deposit cbBTC, you receive jBTCi tokens representing your share of the 
 ## What is the minimum deposit?
 The minimum deposit is 0.01 BTC.
 
+## What is the deposit cap?
+The current deposit cap is **1 BTC** as we launch in a controlled manner to ensure security and stability. As the protocol matures and undergoes additional auditing, we will progressively increase the cap toward our maximum of **1,000 BTC**. Cap increases will be announced on our Discord and Twitter.
+
 ## What are the fees?
 - **Performance Fee**: 10% of profits only
 - **Management Fee**: None
@@ -39,6 +42,9 @@ jBTCi is a product of Jubilee Protocol, governed by Hundredfold Foundation and d
 2. Enter the amount of jBTCi you want to redeem
 3. Click "Withdraw cbBTC"
 4. Confirm the transaction in your wallet
+
+## How can I contact the team?
+For questions, partnerships, or support, email us at **contact@jubileeprotocol.xyz** or join our [Discord](https://discord.gg/yBhdxtMB).
 
 ## Where can I learn more?
 - [GitHub Repository](https://github.com/Jubilee-Protocol/jBTCi-on-Base)
