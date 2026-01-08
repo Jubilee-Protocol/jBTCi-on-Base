@@ -3,14 +3,14 @@
 import Image from 'next/image';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount, useReadContract, useWriteContract, useChainId, useWaitForTransactionReceipt } from 'wagmi';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { formatUnits, parseUnits } from 'viem';
 import { CONTRACTS } from '../config';
 
 // Min deposit constant
 const MIN_DEPOSIT_BTC = 0.01;
 
-// Strategy ABI - deposit, redeem, and status
+// Strategy ABI - deposit, redeem, convertToAssets, and status
 const STRATEGY_ABI = [
     {
         name: 'getStrategyStatus',
@@ -59,6 +59,13 @@ const STRATEGY_ABI = [
         ],
         outputs: [{ name: 'assets', type: 'uint256' }]
     },
+    {
+        name: 'convertToAssets',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [{ name: 'shares', type: 'uint256' }],
+        outputs: [{ name: 'assets', type: 'uint256' }]
+    },
 ] as const;
 
 const ERC20_ABI = [
@@ -91,14 +98,45 @@ const ERC20_ABI = [
     },
 ] as const;
 
-// Stronger gradient with 30% color saturation
-const gradientStyle = {
-    background: `
-        radial-gradient(ellipse at top left, rgba(243, 119, 187, 0.30) 0%, transparent 60%),
-        radial-gradient(ellipse at bottom right, rgba(243, 119, 187, 0.22) 0%, transparent 60%),
-        radial-gradient(ellipse at center, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.85) 40%, rgba(0, 82, 255, 0.25) 100%)
-    `,
+// Theme types
+type Theme = 'light' | 'dark';
+
+// Get gradient style based on theme
+const getGradientStyle = (theme: Theme) => ({
+    background: theme === 'light'
+        ? `
+            radial-gradient(ellipse at top left, rgba(243, 119, 187, 0.30) 0%, transparent 60%),
+            radial-gradient(ellipse at bottom right, rgba(243, 119, 187, 0.22) 0%, transparent 60%),
+            radial-gradient(ellipse at center, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.85) 40%, rgba(0, 82, 255, 0.25) 100%)
+        `
+        : `
+            radial-gradient(ellipse at top left, rgba(243, 119, 187, 0.15) 0%, transparent 60%),
+            radial-gradient(ellipse at bottom right, rgba(0, 82, 255, 0.15) 0%, transparent 60%),
+            #0a0a0f
+        `,
     minHeight: '100vh'
+});
+
+// Theme colors
+const colors = {
+    light: {
+        bg: '#FFFFFF',
+        card: '#FFFFFF',
+        cardBorder: 'rgba(0, 82, 255, 0.1)',
+        text: '#3B3B3B',
+        textMuted: '#6B7280',
+        textLight: '#9CA3AF',
+        inputBg: '#F9FAFB',
+    },
+    dark: {
+        bg: '#0a0a0f',
+        card: '#1a1a2e',
+        cardBorder: 'rgba(0, 82, 255, 0.2)',
+        text: '#E5E7EB',
+        textMuted: '#9CA3AF',
+        textLight: '#6B7280',
+        inputBg: '#16162a',
+    }
 };
 
 // Toast component - mobile responsive
@@ -150,6 +188,14 @@ function Toast({ message, type, onClose }: { message: string; type: 'success' | 
     );
 }
 
+// Transaction history type
+interface TxHistoryItem {
+    type: 'deposit' | 'withdraw';
+    amount: string;
+    timestamp: number;
+    hash: string;
+}
+
 export default function Home() {
     const { address, isConnected } = useAccount();
     const chainId = useChainId();
@@ -159,6 +205,12 @@ export default function Home() {
     const [showTermsModal, setShowTermsModal] = useState(true);
     const [btcPrice, setBtcPrice] = useState(91000);
     const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'pending' } | null>(null);
+    const [theme, setTheme] = useState<Theme>('light');
+    const [showHistory, setShowHistory] = useState(false);
+    const [txHistory, setTxHistory] = useState<TxHistoryItem[]>([]);
+
+    // Get theme colors
+    const c = colors[theme];
 
     // Contract write hooks
     const { writeContract: approveToken, data: approveHash, isPending: isApproving } = useWriteContract();
@@ -169,6 +221,42 @@ export default function Home() {
     const { isLoading: isApproveConfirming, isSuccess: isApproveSuccess } = useWaitForTransactionReceipt({ hash: approveHash });
     const { isLoading: isDepositConfirming, isSuccess: isDepositSuccess } = useWaitForTransactionReceipt({ hash: depositHash });
     const { isLoading: isRedeemConfirming, isSuccess: isRedeemSuccess } = useWaitForTransactionReceipt({ hash: redeemHash });
+
+    // Load theme from localStorage
+    useEffect(() => {
+        const savedTheme = localStorage.getItem('jbtci-theme') as Theme | null;
+        if (savedTheme) {
+            setTheme(savedTheme);
+        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            setTheme('dark');
+        }
+    }, []);
+
+    // Toggle theme
+    const toggleTheme = useCallback(() => {
+        const newTheme = theme === 'light' ? 'dark' : 'light';
+        setTheme(newTheme);
+        localStorage.setItem('jbtci-theme', newTheme);
+    }, [theme]);
+
+    // Load transaction history from localStorage
+    useEffect(() => {
+        if (address) {
+            const saved = localStorage.getItem(`jbtci-history-${address}`);
+            if (saved) {
+                setTxHistory(JSON.parse(saved));
+            }
+        }
+    }, [address]);
+
+    // Save transaction to history
+    const saveTxToHistory = useCallback((type: 'deposit' | 'withdraw', amount: string, hash: string) => {
+        if (!address) return;
+        const newTx: TxHistoryItem = { type, amount, timestamp: Date.now(), hash };
+        const updated = [newTx, ...txHistory].slice(0, 20); // Keep last 20
+        setTxHistory(updated);
+        localStorage.setItem(`jbtci-history-${address}`, JSON.stringify(updated));
+    }, [address, txHistory]);
 
     // Fetch live BTC price from CoinGecko
     useEffect(() => {
@@ -197,24 +285,25 @@ export default function Home() {
         }
     }, []);
 
-    // Handle transaction success toasts
+    // Handle transaction success toasts and history
     useEffect(() => {
-        if (isDepositSuccess) {
+        if (isDepositSuccess && depositHash) {
             setToast({ message: 'Deposit successful! You received jBTCi tokens.', type: 'success' });
+            saveTxToHistory('deposit', depositAmount, depositHash);
             setDepositAmount('');
         }
     }, [isDepositSuccess]);
 
     useEffect(() => {
-        if (isRedeemSuccess) {
+        if (isRedeemSuccess && redeemHash) {
             setToast({ message: 'Withdrawal successful! cbBTC sent to your wallet.', type: 'success' });
+            saveTxToHistory('withdraw', depositAmount, redeemHash);
             setDepositAmount('');
         }
     }, [isRedeemSuccess]);
 
     useEffect(() => {
         if (isApproveSuccess && depositAmount) {
-            // After approval succeeds, execute deposit
             handleDeposit();
         }
     }, [isApproveSuccess]);
@@ -260,6 +349,16 @@ export default function Home() {
         args: address ? [address, strategyAddress] : undefined,
     });
 
+    // Share ratio: 1 jBTCi = X BTC
+    const { data: shareRatio } = useReadContract({
+        address: strategyAddress,
+        abi: STRATEGY_ABI,
+        functionName: 'convertToAssets',
+        args: [BigInt(1e8)], // 1 jBTCi in wei (8 decimals)
+    });
+
+    const shareRatioDisplay = shareRatio ? (Number(formatUnits(shareRatio, 8))).toFixed(6) : '1.000000';
+
     const wbtcPercent = strategyStatus ? Number(strategyStatus.wbtcAlloc) / 100 : 50;
     const cbbtcPercent = strategyStatus ? Number(strategyStatus.cbbtcAlloc) / 100 : 50;
     const totalHoldings = strategyStatus ? Number(formatUnits(strategyStatus.totalHoldings, 8)) : 0;
@@ -270,9 +369,8 @@ export default function Home() {
         if (!address || !depositAmount) return;
 
         try {
-            const amountWei = parseUnits(depositAmount, 8); // cbBTC has 8 decimals
+            const amountWei = parseUnits(depositAmount, 8);
 
-            // Check if approval is needed
             if (!allowance || allowance < amountWei) {
                 setToast({ message: 'Approving cbBTC...', type: 'pending' });
                 approveToken({
@@ -281,7 +379,7 @@ export default function Home() {
                     functionName: 'approve',
                     args: [strategyAddress, amountWei],
                 });
-                return; // Will continue after approval success
+                return;
             }
 
             setToast({ message: 'Depositing cbBTC...', type: 'pending' });
@@ -328,7 +426,7 @@ export default function Home() {
 
     const isLoading = isApproving || isDepositing || isRedeeming || isApproveConfirming || isDepositConfirming || isRedeemConfirming;
 
-    // Terms Modal - Light theme matching jBTCi brand
+    // Terms Modal - Light theme with Hundredfold Foundation
     if (showTermsModal && !hasAcceptedTerms) {
         return (
             <div style={{
@@ -352,7 +450,7 @@ export default function Home() {
                 }}>
                     <div style={{ textAlign: 'center', marginBottom: '28px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', marginBottom: '8px' }}>
-                            <Image src="/jubilee-logo.png" alt="Jubilee" width={36} height={36} />
+                            <Image src="/jubilee-logo-pink.png" alt="Jubilee" width={40} height={40} />
                             <span style={{ fontSize: '28px', fontWeight: 'bold', color: '#3B3B3B' }}>jBTCi</span>
                         </div>
                         <h2 style={{ fontSize: '20px', fontWeight: '600', color: '#0052FF' }}>
@@ -373,19 +471,19 @@ export default function Home() {
                         border: '1px solid rgba(0, 82, 255, 0.1)'
                     }}>
                         <p style={{ marginBottom: '16px', fontWeight: '600', color: '#3B3B3B' }}>
-                            By using jBTCi, a product of Jubilee Protocol operated by Jubilee Labs, you acknowledge and agree:
+                            By using jBTCi, a product of Jubilee Protocol governed by Hundredfold Foundation and developed by Jubilee Labs, you acknowledge and agree:
                         </p>
 
                         <p style={{ marginBottom: '14px' }}>
-                            <strong style={{ color: '#0052FF' }}>(a)</strong> jBTCi is provided on an "AS-IS" and "AS AVAILABLE" basis. Jubilee Labs and its affiliates expressly disclaim all representations, warranties, and conditions of any kind, whether express, implied, or statutory.
+                            <strong style={{ color: '#0052FF' }}>(a)</strong> jBTCi is provided on an &quot;AS-IS&quot; and &quot;AS AVAILABLE&quot; basis. Hundredfold Foundation, Jubilee Labs, and their affiliates expressly disclaim all representations, warranties, and conditions of any kind, whether express, implied, or statutory.
                         </p>
 
                         <p style={{ marginBottom: '14px' }}>
-                            <strong style={{ color: '#0052FF' }}>(b)</strong> Jubilee Labs makes no warranty that jBTCi will meet your requirements, be available on an uninterrupted, timely, secure, or error-free basis, or be accurate, reliable, or free of harmful code.
+                            <strong style={{ color: '#0052FF' }}>(b)</strong> Neither Hundredfold Foundation nor Jubilee Labs makes any warranty that jBTCi will meet your requirements, be available on an uninterrupted, timely, secure, or error-free basis, or be accurate, reliable, or free of harmful code.
                         </p>
 
                         <p style={{ marginBottom: '14px' }}>
-                            <strong style={{ color: '#0052FF' }}>(c)</strong> You shall have no claim against Jubilee Labs or its affiliates for any loss arising from your use of jBTCi or Jubilee Protocol products.
+                            <strong style={{ color: '#0052FF' }}>(c)</strong> You shall have no claim against Hundredfold Foundation, Jubilee Labs, or their affiliates for any loss arising from your use of jBTCi or Jubilee Protocol products.
                         </p>
 
                         <p style={{ marginBottom: '14px' }}>
@@ -413,11 +511,11 @@ export default function Home() {
                             transition: 'all 0.2s ease'
                         }}
                     >
-                        I Understand & Accept
+                        I Understand &amp; Accept
                     </button>
 
                     <p style={{ textAlign: 'center', marginTop: '16px', fontSize: '11px', color: '#9CA3AF' }}>
-                        By clicking Accept, you agree to the Jubilee Labs Terms of Service
+                        By clicking Accept, you agree to the Jubilee Protocol Terms of Service
                     </p>
                 </div>
             </div>
@@ -440,29 +538,61 @@ export default function Home() {
             {/* Toast notifications */}
             {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
 
-            <main style={gradientStyle} className="flex flex-col">
+            <main style={getGradientStyle(theme)} className="flex flex-col">
                 {/* Header */}
-                <header className="px-6 py-5 flex justify-between items-center">
-                    <div className="flex items-center gap-3">
-                        <Image src="/jubilee-logo.png" alt="Jubilee" width={28} height={28} />
-                        <span className="text-xl font-bold text-[#3B3B3B]">jBTCi</span>
+                <header style={{
+                    padding: '20px 24px',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <Image src="/jubilee-logo-pink.png" alt="Jubilee" width={32} height={32} />
+                        <span style={{ fontSize: '22px', fontWeight: 'bold', color: c.text }}>jBTCi</span>
                     </div>
-                    <ConnectButton />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                        {/* Dark mode toggle */}
+                        <button
+                            onClick={toggleTheme}
+                            style={{
+                                background: theme === 'dark' ? '#1a1a2e' : '#F3F4F6',
+                                border: 'none',
+                                borderRadius: '50%',
+                                width: '40px',
+                                height: '40px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                cursor: 'pointer',
+                                fontSize: '18px'
+                            }}
+                            title={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+                        >
+                            {theme === 'light' ? '🌙' : '☀️'}
+                        </button>
+                        <ConnectButton />
+                    </div>
                 </header>
 
                 {/* Main Content */}
                 <div className="flex-1 flex items-center justify-center px-6 py-8">
                     <div className="w-full max-w-[480px]">
                         {/* Card */}
-                        <div className="bg-white rounded-2xl p-8 shadow-lg border border-blue-100">
+                        <div style={{
+                            background: c.card,
+                            borderRadius: '16px',
+                            padding: '32px',
+                            boxShadow: '0 4px 24px rgba(0, 82, 255, 0.08)',
+                            border: `1px solid ${c.cardBorder}`
+                        }}>
                             {/* Tabs */}
-                            <div style={{ display: 'flex', gap: '32px', marginBottom: '32px', borderBottom: '1px solid #E5E7EB', paddingBottom: '16px' }}>
+                            <div style={{ display: 'flex', gap: '32px', marginBottom: '32px', borderBottom: `1px solid ${c.cardBorder}`, paddingBottom: '16px' }}>
                                 <button
                                     onClick={() => setActiveTab('deposit')}
                                     style={{
                                         fontSize: '18px',
                                         fontWeight: '600',
-                                        color: activeTab === 'deposit' ? '#0052FF' : '#9CA3AF',
+                                        color: activeTab === 'deposit' ? '#0052FF' : c.textLight,
                                         background: 'none',
                                         border: 'none',
                                         cursor: 'pointer'
@@ -475,7 +605,7 @@ export default function Home() {
                                     style={{
                                         fontSize: '18px',
                                         fontWeight: '600',
-                                        color: activeTab === 'withdraw' ? '#0052FF' : '#9CA3AF',
+                                        color: activeTab === 'withdraw' ? '#0052FF' : c.textLight,
                                         background: 'none',
                                         border: 'none',
                                         cursor: 'pointer'
@@ -483,16 +613,82 @@ export default function Home() {
                                 >
                                     Withdraw
                                 </button>
+                                {/* History toggle */}
+                                {isConnected && (
+                                    <button
+                                        onClick={() => setShowHistory(!showHistory)}
+                                        style={{
+                                            marginLeft: 'auto',
+                                            fontSize: '14px',
+                                            color: showHistory ? '#0052FF' : c.textLight,
+                                            background: 'none',
+                                            border: 'none',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        History
+                                    </button>
+                                )}
                             </div>
+
+                            {/* Transaction History Panel */}
+                            {showHistory && isConnected && (
+                                <div style={{
+                                    marginBottom: '24px',
+                                    padding: '16px',
+                                    background: c.inputBg,
+                                    borderRadius: '12px',
+                                    maxHeight: '200px',
+                                    overflowY: 'auto'
+                                }}>
+                                    <div style={{ fontSize: '14px', fontWeight: '600', color: c.text, marginBottom: '12px' }}>
+                                        Recent Transactions
+                                    </div>
+                                    {txHistory.length === 0 ? (
+                                        <div style={{ fontSize: '13px', color: c.textMuted }}>No transactions yet</div>
+                                    ) : (
+                                        txHistory.map((tx, i) => (
+                                            <div key={i} style={{
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'center',
+                                                padding: '10px 0',
+                                                borderBottom: i < txHistory.length - 1 ? `1px solid ${c.cardBorder}` : 'none'
+                                            }}>
+                                                <div>
+                                                    <span style={{
+                                                        color: tx.type === 'deposit' ? '#22C55E' : '#F59E0B',
+                                                        fontWeight: '500',
+                                                        fontSize: '13px'
+                                                    }}>
+                                                        {tx.type === 'deposit' ? '↓ Deposit' : '↑ Withdraw'}
+                                                    </span>
+                                                    <span style={{ marginLeft: '8px', color: c.text, fontSize: '13px' }}>
+                                                        {tx.amount} BTC
+                                                    </span>
+                                                </div>
+                                                <a
+                                                    href={`https://basescan.org/tx/${tx.hash}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    style={{ color: '#0052FF', fontSize: '12px' }}
+                                                >
+                                                    View ↗
+                                                </a>
+                                            </div>
+                                        ))
+                                    )}
+                                </div>
+                            )}
 
                             {/* Input Section */}
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
                                 {/* Input Token */}
-                                <div style={{ background: '#F9FAFB', borderRadius: '16px', padding: '20px' }}>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: '#6B7280', marginBottom: '16px' }}>
+                                <div style={{ background: c.inputBg, borderRadius: '16px', padding: '20px' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: c.textMuted, marginBottom: '16px' }}>
                                         <span>{activeTab === 'deposit' ? 'You deposit' : 'You withdraw'}</span>
                                         <span>
-                                            Balance: <span style={{ color: '#3B3B3B', fontWeight: '500' }}>
+                                            Balance: <span style={{ color: c.text, fontWeight: '500' }}>
                                                 {activeTab === 'deposit'
                                                     ? (cbBTCBalance ? parseFloat(formatUnits(cbBTCBalance, 8)).toFixed(4) : '0.00')
                                                     : (jBTCiBalance ? parseFloat(formatUnits(jBTCiBalance, 8)).toFixed(4) : '0.00')
@@ -514,7 +710,7 @@ export default function Home() {
                                                 border: 'none',
                                                 outline: 'none',
                                                 width: '100%',
-                                                color: '#3B3B3B'
+                                                color: c.text
                                             }}
                                         />
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
@@ -544,7 +740,7 @@ export default function Home() {
                                             )}
                                         </div>
                                     </div>
-                                    <div style={{ fontSize: '14px', color: '#9CA3AF', marginTop: '12px' }}>≈ ${depositUsdValue.toLocaleString()}</div>
+                                    <div style={{ fontSize: '14px', color: c.textLight, marginTop: '12px' }}>≈ ${depositUsdValue.toLocaleString()}</div>
                                 </div>
 
                                 {/* Arrow - Click to toggle */}
@@ -552,15 +748,15 @@ export default function Home() {
                                     <button
                                         onClick={() => setActiveTab(activeTab === 'deposit' ? 'withdraw' : 'deposit')}
                                         style={{
-                                            background: 'white',
-                                            border: '1px solid #E5E7EB',
+                                            background: c.card,
+                                            border: `1px solid ${c.cardBorder}`,
                                             borderRadius: '50%',
                                             padding: '12px',
                                             boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
                                             cursor: 'pointer'
                                         }}
                                     >
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3B3B3B" strokeWidth="2">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={c.text} strokeWidth="2">
                                             <line x1="12" y1="5" x2="12" y2="19" />
                                             <polyline points="19 12 12 19 5 12" />
                                         </svg>
@@ -568,10 +764,10 @@ export default function Home() {
                                 </div>
 
                                 {/* Output Token */}
-                                <div style={{ background: '#F9FAFB', borderRadius: '16px', padding: '20px' }}>
-                                    <div style={{ fontSize: '14px', color: '#6B7280', marginBottom: '16px' }}>You receive</div>
+                                <div style={{ background: c.inputBg, borderRadius: '16px', padding: '20px' }}>
+                                    <div style={{ fontSize: '14px', color: c.textMuted, marginBottom: '16px' }}>You receive</div>
                                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                        <span style={{ fontSize: '28px', fontWeight: '600', color: '#3B3B3B' }}>{depositAmount || '0'}</span>
+                                        <span style={{ fontSize: '28px', fontWeight: '600', color: c.text }}>{depositAmount || '0'}</span>
                                         {activeTab === 'deposit' ? (
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#FEF3C7', borderRadius: '20px', padding: '8px 16px' }}>
                                                 <div style={{ width: '24px', height: '24px', background: '#FFA500', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -588,11 +784,14 @@ export default function Home() {
                                             </div>
                                         )}
                                     </div>
-                                    <div style={{ fontSize: '14px', color: '#9CA3AF', marginTop: '12px' }}>1 {activeTab === 'deposit' ? 'cbBTC' : 'jBTCi'} = 1 {activeTab === 'deposit' ? 'jBTCi' : 'cbBTC'}</div>
+                                    {/* Share Ratio Display */}
+                                    <div style={{ fontSize: '14px', color: c.textLight, marginTop: '12px' }}>
+                                        1 jBTCi = {shareRatioDisplay} BTC
+                                    </div>
                                 </div>
 
                                 {/* Min deposit + Get cbBTC hint */}
-                                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: '#9CA3AF', padding: '0 8px' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: c.textLight, padding: '0 8px' }}>
                                     <span>Min. deposit: {MIN_DEPOSIT_BTC} BTC ≈ ${(MIN_DEPOSIT_BTC * btcPrice).toFixed(0)}</span>
                                     <a
                                         href="https://app.uniswap.org/swap?chain=base&outputCurrency=0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf"
@@ -643,8 +842,8 @@ export default function Home() {
                                             fontWeight: '600',
                                             background: (depositAmount && parseFloat(depositAmount) > 0 && !isLoading)
                                                 ? 'linear-gradient(135deg, #0052FF 0%, #003DBF 100%)'
-                                                : '#E5E7EB',
-                                            color: (depositAmount && parseFloat(depositAmount) > 0 && !isLoading) ? 'white' : '#9CA3AF',
+                                                : theme === 'dark' ? '#2a2a3e' : '#E5E7EB',
+                                            color: (depositAmount && parseFloat(depositAmount) > 0 && !isLoading) ? 'white' : c.textLight,
                                             border: 'none',
                                             cursor: (depositAmount && parseFloat(depositAmount) > 0 && !isLoading) ? 'pointer' : 'not-allowed',
                                             boxShadow: (depositAmount && parseFloat(depositAmount) > 0 && !isLoading) ? '0 4px 14px rgba(0, 82, 255, 0.3)' : 'none',
@@ -678,27 +877,27 @@ export default function Home() {
 
                         {/* Stats Row */}
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', marginTop: '24px' }}>
-                            <div style={{ background: 'white', borderRadius: '12px', padding: '12px', textAlign: 'center', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', border: '1px solid #F3F4F6' }}>
-                                <div style={{ fontSize: '10px', color: '#9CA3AF', textTransform: 'uppercase', marginBottom: '4px' }}>TVL</div>
-                                <div style={{ fontSize: '14px', fontWeight: '600', color: '#3B3B3B' }}>{totalHoldings.toFixed(2)}</div>
+                            <div style={{ background: c.card, borderRadius: '12px', padding: '12px', textAlign: 'center', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', border: `1px solid ${c.cardBorder}` }}>
+                                <div style={{ fontSize: '10px', color: c.textLight, textTransform: 'uppercase', marginBottom: '4px' }}>TVL</div>
+                                <div style={{ fontSize: '14px', fontWeight: '600', color: c.text }}>{totalHoldings.toFixed(2)}</div>
                             </div>
-                            <div style={{ background: 'white', borderRadius: '12px', padding: '12px', textAlign: 'center', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', border: '1px solid #F3F4F6' }}>
-                                <div style={{ fontSize: '10px', color: '#9CA3AF', textTransform: 'uppercase', marginBottom: '4px' }}>APY</div>
+                            <div style={{ background: c.card, borderRadius: '12px', padding: '12px', textAlign: 'center', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', border: `1px solid ${c.cardBorder}` }}>
+                                <div style={{ fontSize: '10px', color: c.textLight, textTransform: 'uppercase', marginBottom: '4px' }}>APY</div>
                                 <div style={{ fontSize: '14px', fontWeight: '600', color: '#0052FF' }}>6-10%</div>
                             </div>
-                            <div style={{ background: 'white', borderRadius: '12px', padding: '12px', textAlign: 'center', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', border: '1px solid #F3F4F6' }}>
-                                <div style={{ fontSize: '10px', color: '#9CA3AF', textTransform: 'uppercase', marginBottom: '4px' }}>WBTC</div>
+                            <div style={{ background: c.card, borderRadius: '12px', padding: '12px', textAlign: 'center', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', border: `1px solid ${c.cardBorder}` }}>
+                                <div style={{ fontSize: '10px', color: c.textLight, textTransform: 'uppercase', marginBottom: '4px' }}>WBTC</div>
                                 <div style={{ fontSize: '14px', fontWeight: '600', color: '#FFA500' }}>{wbtcPercent.toFixed(0)}%</div>
                             </div>
-                            <div style={{ background: 'white', borderRadius: '12px', padding: '12px', textAlign: 'center', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', border: '1px solid #F3F4F6' }}>
-                                <div style={{ fontSize: '10px', color: '#9CA3AF', textTransform: 'uppercase', marginBottom: '4px' }}>cbBTC</div>
+                            <div style={{ background: c.card, borderRadius: '12px', padding: '12px', textAlign: 'center', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', border: `1px solid ${c.cardBorder}` }}>
+                                <div style={{ fontSize: '10px', color: c.textLight, textTransform: 'uppercase', marginBottom: '4px' }}>cbBTC</div>
                                 <div style={{ fontSize: '14px', fontWeight: '600', color: '#0052FF' }}>{cbbtcPercent.toFixed(0)}%</div>
                             </div>
                         </div>
 
                         {/* User Balances */}
                         {isConnected && (
-                            <div style={{ display: 'flex', justifyContent: 'center', gap: '24px', marginTop: '16px', fontSize: '13px', color: '#6B7280' }}>
+                            <div style={{ display: 'flex', justifyContent: 'center', gap: '24px', marginTop: '16px', fontSize: '13px', color: c.textMuted }}>
                                 <span>
                                     Your cbBTC: <strong style={{ color: '#0052FF' }}>{cbBTCBalance ? parseFloat(formatUnits(cbBTCBalance, 8)).toFixed(4) : '0'}</strong>
                                 </span>
@@ -713,10 +912,10 @@ export default function Home() {
                             <span style={{ color: strategyStatus?.isPaused ? '#EF4444' : '#22C55E' }}>
                                 ● {strategyStatus?.isPaused ? 'Paused' : 'Active'}
                             </span>
-                            <a href="https://basescan.org/address/0x7d0Ae1Fa145F3d5B511262287fF686C25000816D" target="_blank" rel="noopener noreferrer" style={{ color: '#9CA3AF' }}>
+                            <a href="https://basescan.org/address/0x7d0Ae1Fa145F3d5B511262287fF686C25000816D" target="_blank" rel="noopener noreferrer" style={{ color: c.textLight }}>
                                 Contract ↗
                             </a>
-                            <a href="https://github.com/Jubilee-Protocol/jBTCi-on-Base/blob/main/docs/AUDIT_REPORT.md" target="_blank" rel="noopener noreferrer" style={{ color: '#9CA3AF' }}>
+                            <a href="https://github.com/Jubilee-Protocol/jBTCi-on-Base/blob/main/docs/AUDIT_REPORT.md" target="_blank" rel="noopener noreferrer" style={{ color: c.textLight }}>
                                 Audit ↗
                             </a>
                         </div>
@@ -724,8 +923,8 @@ export default function Home() {
                 </div>
 
                 {/* Footer */}
-                <footer style={{ padding: '24px', textAlign: 'center', fontSize: '14px', color: '#9CA3AF' }}>
-                    2026 © Jubilee Labs
+                <footer style={{ padding: '24px', textAlign: 'center', fontSize: '14px', color: c.textLight }}>
+                    2026 © Jubilee Protocol · Governed by Hundredfold Foundation
                 </footer>
             </main>
         </>
