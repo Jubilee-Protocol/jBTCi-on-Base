@@ -1,9 +1,8 @@
 'use client';
 
-import Image from 'next/image';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount, useReadContract, useChainId } from 'wagmi';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { formatUnits } from 'viem';
 import { CONTRACTS } from '../config';
 
@@ -56,11 +55,6 @@ export default function Home() {
     const chainId = useChainId();
     const [depositAmount, setDepositAmount] = useState('');
     const [activeTab, setActiveTab] = useState<'deposit' | 'withdraw'>('deposit');
-    const [mounted, setMounted] = useState(false);
-
-    useEffect(() => {
-        setMounted(true);
-    }, []);
 
     const isMainnet = chainId === 8453;
     const contracts = isMainnet ? CONTRACTS.mainnet : CONTRACTS.testnet;
@@ -84,14 +78,6 @@ export default function Home() {
     const cbbtcPercent = strategyStatus ? Number(strategyStatus.cbbtcAlloc) / 100 : 50;
     const totalHoldings = strategyStatus ? Number(formatUnits(strategyStatus.totalHoldings, 8)) : 0;
     const depositUsdValue = (parseFloat(depositAmount || '0') * BTC_PRICE_USD);
-
-    if (!mounted) {
-        return (
-            <main className="bg-vignette min-h-screen flex items-center justify-center">
-                <div className="text-gray-400 animate-pulse">Loading...</div>
-            </main>
-        );
-    }
 
     // ========== LANDING PAGE ==========
     if (!isConnected) {
