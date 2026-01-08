@@ -88,6 +88,10 @@ npx hardhat run deploy/DeployJBTCi_Testnet.js --network baseSepolia
 
 **[Jubilee Labs](https://jubileelabs.xyz)** • Powered by **[Yearn V3](https://yearn.fi)** • Deployed on **[Base](https://base.org)**
 
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
 ---
 
 *"Seek first the Kingdom of God!"* — Matthew 6:33
