@@ -212,7 +212,7 @@ export default function Home() {
 
                         {/* Links */}
                         <div className="flex justify-center gap-8 mt-8 text-sm text-gray-500">
-                            <a href="https://basescan.org/address/0x8080d5Ac768B69Cb64d37524A2659d31281f8bA3" target="_blank" className="hover:text-white transition-colors">Contract ↗</a>
+                            <a href="https://basescan.org/address/0x7d0Ae1Fa145F3d5B511262287fF686C25000816D" target="_blank" className="hover:text-white transition-colors">Contract ↗</a>
                             <a href="https://github.com/Jubilee-Protocol/jBTCi-on-Base" target="_blank" className="hover:text-white transition-colors">Docs ↗</a>
                             <a href="https://jubileeprotocol.xyz" target="_blank" className="hover:text-white transition-colors">Jubilee ↗</a>
                         </div>
@@ -244,7 +244,7 @@ export default function Home() {
                     </div>
                     <nav className="hidden sm:flex items-center gap-1 text-sm">
                         <button className="px-3 py-1.5 text-white rounded-lg bg-white/10">Vault</button>
-                        <a href="https://basescan.org/address/0x8080d5Ac768B69Cb64d37524A2659d31281f8bA3" target="_blank" className="px-3 py-1.5 text-gray-400 hover:text-white transition-colors">Contract</a>
+                        <a href="https://basescan.org/address/0x7d0Ae1Fa145F3d5B511262287fF686C25000816D" target="_blank" className="px-3 py-1.5 text-gray-400 hover:text-white transition-colors">Contract</a>
                         <a href="https://github.com/Jubilee-Protocol/jBTCi-on-Base" target="_blank" className="px-3 py-1.5 text-gray-400 hover:text-white transition-colors">Docs</a>
                     </nav>
                 </div>

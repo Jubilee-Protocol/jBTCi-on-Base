@@ -26,4 +26,4 @@ This directory contains the smart contracts for jBTCi - The Bitcoin Index Fund.
 
 ---
 
-**Deployed**: [`0x8080d5Ac768B69Cb64d37524A2659d31281f8bA3`](https://basescan.org/address/0x8080d5Ac768B69Cb64d37524A2659d31281f8bA3)
+**Deployed**: [`0x7d0Ae1Fa145F3d5B511262287fF686C25000816D`](https://basescan.org/address/0x7d0Ae1Fa145F3d5B511262287fF686C25000816D)

@@ -1,13 +1,13 @@
 # jBTCi - The Bitcoin Index Fund
 
-[![Verified on BaseScan](https://img.shields.io/badge/BaseScan-Verified-green)](https://basescan.org/address/0x8080d5Ac768B69Cb64d37524A2659d31281f8bA3)
+[![Verified on BaseScan](https://img.shields.io/badge/BaseScan-Verified-green)](https://basescan.org/address/0x7d0Ae1Fa145F3d5B511262287fF686C25000816D)
 [![Built on Base](https://img.shields.io/badge/Built%20on-Base-blue)](https://base.org)
 [![Powered by Yearn](https://img.shields.io/badge/Powered%20by-Yearn%20V3-purple)](https://yearn.fi)
 
 > A passive, diversified Bitcoin strategy that automatically rebalances between WBTC and cbBTC while capturing arbitrage opportunities.
 
 **Website**: https://jbtci.xyz  
-**Contract**: [`0x8080d5Ac768B69Cb64d37524A2659d31281f8bA3`](https://basescan.org/address/0x8080d5Ac768B69Cb64d37524A2659d31281f8bA3)
+**Contract**: [`0x7d0Ae1Fa145F3d5B511262287fF686C25000816D`](https://basescan.org/address/0x7d0Ae1Fa145F3d5B511262287fF686C25000816D)
 
 ---
 
@@ -27,7 +27,7 @@ jBTCi maintains a 50/50 allocation between WBTC and cbBTC, automatically rebalan
 ## Security
 
 - **Audit Score**: 97/100 ⭐⭐⭐⭐⭐
-- **Verified**: [BaseScan](https://basescan.org/address/0x8080d5Ac768B69Cb64d37524A2659d31281f8bA3#code)
+- **Verified**: [BaseScan](https://basescan.org/address/0x7d0Ae1Fa145F3d5B511262287fF686C25000816D#code)
 
 See [docs/AUDIT_REPORT.md](docs/AUDIT_REPORT.md) for details.
 
@@ -63,7 +63,7 @@ jBTCi-on-Base/
 ### Base Mainnet
 | Contract | Address |
 |----------|---------|
-| jBTCi Strategy | `0x8080d5Ac768B69Cb64d37524A2659d31281f8bA3` |
+| jBTCi Strategy | `0x7d0Ae1Fa145F3d5B511262287fF686C25000816D` |
 | cbBTC | `0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf` |
 | WBTC | `0x0555E30da8f98308EdB960aa94C0Db47230d2B9c` |
 

@@ -1,7 +1,7 @@
 # jBTCi Strategy Security Audit Report
 
 > **Version**: 1.0.0  
-> **Contract**: [`0x8080d5Ac768B69Cb64d37524A2659d31281f8bA3`](https://basescan.org/address/0x8080d5Ac768B69Cb64d37524A2659d31281f8bA3)  
+> **Contract**: [`0x7d0Ae1Fa145F3d5B511262287fF686C25000816D`](https://basescan.org/address/0x7d0Ae1Fa145F3d5B511262287fF686C25000816D)  
 > **Network**: Base Mainnet  
 > **Date**: January 6, 2026  
 > **Status**: ✅ Verified on BaseScan
@@ -122,7 +122,7 @@
 | Field | Value |
 |-------|-------|
 | **Contract** | YearnJBTCiStrategy |
-| **Address** | `0x8080d5Ac768B69Cb64d37524A2659d31281f8bA3` |
+| **Address** | `0x7d0Ae1Fa145F3d5B511262287fF686C25000816D` |
 | **Network** | Base Mainnet (Chain ID: 8453) |
 | **Compiler** | Solidity 0.8.24 |
 | **License** | MIT |
