@@ -32,10 +32,12 @@ body {
   font-family: 'Work Sans', system-ui, -apple-system, sans-serif;
 }
 
-/* Blue vignette background effect */
+/* Gradient background with Base blue, white, and Jubilee pink */
 .bg-vignette {
   background:
-    radial-gradient(ellipse at center, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 50%, var(--blue-vignette) 100%);
+    radial-gradient(ellipse at top left, rgba(243, 119, 187, 0.08) 0%, transparent 40%),
+    radial-gradient(ellipse at bottom right, rgba(243, 119, 187, 0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at center, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.95) 40%, rgba(0, 82, 255, 0.12) 100%);
   min-height: 100vh;
 }
 

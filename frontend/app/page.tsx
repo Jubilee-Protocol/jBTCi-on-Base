@@ -120,7 +120,7 @@ export default function Home() {
                         {/* Social Icons */}
                         <div className="flex justify-center gap-6 mb-8">
                             {/* Base icon */}
-                            <a href="https://base.org" target="_blank" className="social-icon">
+                            <a href="https://base.org" target="_blank" rel="noopener noreferrer" className="social-icon">
                                 <svg width="24" height="24" viewBox="0 0 111 111" fill="none">
                                     <circle cx="55.5" cy="55.5" r="55.5" fill="#0052FF" />
                                     <path d="M55.5 95C77.315 95 95 77.315 95 55.5C95 33.685 77.315 16 55.5 16C33.685 16 16 33.685 16 55.5C16 77.315 33.685 95 55.5 95Z" fill="#0052FF" />
@@ -128,13 +128,13 @@ export default function Home() {
                                 </svg>
                             </a>
                             {/* X/Twitter */}
-                            <a href="https://x.com/jubileelabs" target="_blank" className="social-icon">
+                            <a href="https://x.com/jubileelabs" target="_blank" rel="noopener noreferrer" className="social-icon">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="#3B3B3B">
                                     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
                                 </svg>
                             </a>
                             {/* GitHub */}
-                            <a href="https://github.com/Jubilee-Protocol/jBTCi-on-Base" target="_blank" className="social-icon">
+                            <a href="https://github.com/Jubilee-Protocol/jBTCi-on-Base" target="_blank" rel="noopener noreferrer" className="social-icon">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="#3B3B3B">
                                     <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
                                 </svg>
@@ -184,7 +184,7 @@ export default function Home() {
 
                         {/* Input Section */}
                         <div className="space-y-6">
-                            {/* You deposit */}
+                            {/* Input Token (cbBTC for deposit, jBTCi for withdraw) */}
                             <div className="bg-gray-50 rounded-2xl p-5">
                                 <div className="flex justify-between text-sm text-gray-500 mb-4">
                                     <span>{activeTab === 'deposit' ? 'You deposit' : 'You withdraw'}</span>
@@ -206,12 +206,21 @@ export default function Home() {
                                         >
                                             Max
                                         </button>
-                                        <div className="flex items-center gap-1.5 bg-blue-100 rounded-full px-3 py-1.5">
-                                            <div className="w-5 h-5 bg-[#0052FF] rounded-full flex items-center justify-center">
-                                                <span className="text-white text-[9px] font-bold">cb</span>
+                                        {activeTab === 'deposit' ? (
+                                            <div className="flex items-center gap-1.5 bg-blue-100 rounded-full px-3 py-1.5">
+                                                <div className="w-5 h-5 bg-[#0052FF] rounded-full flex items-center justify-center">
+                                                    <span className="text-white text-[9px] font-bold">cb</span>
+                                                </div>
+                                                <span className="text-[#3B3B3B] text-sm font-medium">cbBTC</span>
                                             </div>
-                                            <span className="text-[#3B3B3B] text-sm font-medium">cbBTC</span>
-                                        </div>
+                                        ) : (
+                                            <div className="flex items-center gap-1.5 bg-orange-100 rounded-full px-3 py-1.5">
+                                                <div className="w-5 h-5 bg-[#FFA500] rounded-full flex items-center justify-center">
+                                                    <span className="text-white text-[9px] font-bold">j</span>
+                                                </div>
+                                                <span className="text-[#3B3B3B] text-sm font-medium">jBTCi</span>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="text-sm text-gray-400 mt-3">≈ ${depositUsdValue.toLocaleString()}</div>
@@ -227,19 +236,28 @@ export default function Home() {
                                 </div>
                             </div>
 
-                            {/* You receive */}
+                            {/* Output Token (jBTCi for deposit, cbBTC for withdraw) */}
                             <div className="bg-gray-50 rounded-2xl p-5">
                                 <div className="text-sm text-gray-500 mb-4">You receive</div>
                                 <div className="flex items-center justify-between">
                                     <span className="text-3xl font-semibold text-[#3B3B3B]">{depositAmount || '0'}</span>
-                                    <div className="flex items-center gap-2 bg-orange-100 rounded-full px-4 py-2">
-                                        <div className="w-6 h-6 bg-[#FFA500] rounded-full flex items-center justify-center">
-                                            <span className="text-white text-[10px] font-bold">j</span>
+                                    {activeTab === 'deposit' ? (
+                                        <div className="flex items-center gap-2 bg-orange-100 rounded-full px-4 py-2">
+                                            <div className="w-6 h-6 bg-[#FFA500] rounded-full flex items-center justify-center">
+                                                <span className="text-white text-[10px] font-bold">j</span>
+                                            </div>
+                                            <span className="text-[#3B3B3B] text-sm font-medium">jBTCi</span>
                                         </div>
-                                        <span className="text-[#3B3B3B] text-sm font-medium">jBTCi</span>
-                                    </div>
+                                    ) : (
+                                        <div className="flex items-center gap-2 bg-blue-100 rounded-full px-4 py-2">
+                                            <div className="w-6 h-6 bg-[#0052FF] rounded-full flex items-center justify-center">
+                                                <span className="text-white text-[10px] font-bold">cb</span>
+                                            </div>
+                                            <span className="text-[#3B3B3B] text-sm font-medium">cbBTC</span>
+                                        </div>
+                                    )}
                                 </div>
-                                <div className="text-sm text-gray-400 mt-3">1 cbBTC = 1 jBTCi share</div>
+                                <div className="text-sm text-gray-400 mt-3">1 {activeTab === 'deposit' ? 'cbBTC' : 'jBTCi'} = 1 {activeTab === 'deposit' ? 'jBTCi' : 'cbBTC'}</div>
                             </div>
 
                             {/* Min deposit notice */}
@@ -281,14 +299,14 @@ export default function Home() {
                     </div>
 
                     {/* Status & Links */}
-                    <div className="flex justify-center gap-6 mt-6 text-sm">
+                    <div className="flex justify-center items-center gap-8 mt-8 text-sm">
                         <span className={strategyStatus?.isPaused ? 'text-red-500' : 'text-green-500'}>
                             ● {strategyStatus?.isPaused ? 'Paused' : 'Active'}
                         </span>
-                        <a href="https://basescan.org/address/0x7d0Ae1Fa145F3d5B511262287fF686C25000816D" target="_blank" className="text-gray-400 hover:text-blue-primary">
+                        <a href="https://basescan.org/address/0x7d0Ae1Fa145F3d5B511262287fF686C25000816D" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-primary transition-colors">
                             Contract ↗
                         </a>
-                        <a href="https://github.com/Jubilee-Protocol/jBTCi-on-Base" target="_blank" className="text-gray-400 hover:text-blue-primary">
+                        <a href="https://github.com/Jubilee-Protocol/jBTCi-on-Base" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-primary transition-colors">
                             Docs ↗
                         </a>
                     </div>
