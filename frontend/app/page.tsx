@@ -257,14 +257,14 @@ export default function Home() {
                     </div>
 
                     {/* Status & Links */}
-                    <div className="flex justify-center items-center gap-8 mt-8 text-sm">
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '24px', marginTop: '24px', fontSize: '14px' }}>
                         <span className={strategyStatus?.isPaused ? 'text-red-500' : 'text-green-500'}>
                             ● {strategyStatus?.isPaused ? 'Paused' : 'Active'}
                         </span>
-                        <a href="https://basescan.org/address/0x7d0Ae1Fa145F3d5B511262287fF686C25000816D" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#0052FF] transition-colors">
+                        <a href="https://basescan.org/address/0x7d0Ae1Fa145F3d5B511262287fF686C25000816D" target="_blank" rel="noopener noreferrer" style={{ color: '#9CA3AF' }}>
                             Contract ↗
                         </a>
-                        <a href="https://github.com/Jubilee-Protocol/jBTCi-on-Base/blob/main/docs/AUDIT_REPORT.md" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#0052FF] transition-colors">
+                        <a href="https://github.com/Jubilee-Protocol/jBTCi-on-Base/blob/main/docs/AUDIT_REPORT.md" target="_blank" rel="noopener noreferrer" style={{ color: '#9CA3AF' }}>
                             Audit ↗
                         </a>
                     </div>
@@ -279,13 +279,13 @@ export default function Home() {
             </div>
 
             {/* Footer */}
-            <footer className="py-6 text-center text-sm">
-                <div className="flex justify-center items-center gap-6 text-gray-400">
+            <footer style={{ padding: '24px', textAlign: 'center', fontSize: '14px' }}>
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '24px', color: '#9CA3AF' }}>
                     <span>2026 © Jubilee Labs</span>
-                    <a href="https://github.com/Jubilee-Protocol/jBTCi-on-Base/blob/main/docs/AUDIT_REPORT.md" target="_blank" rel="noopener noreferrer" className="hover:text-[#0052FF] transition-colors">
+                    <a href="https://github.com/Jubilee-Protocol/jBTCi-on-Base/blob/main/docs/AUDIT_REPORT.md" target="_blank" rel="noopener noreferrer">
                         Audit Report
                     </a>
-                    <a href="https://github.com/Jubilee-Protocol/jBTCi-on-Base" target="_blank" rel="noopener noreferrer" className="hover:text-[#0052FF] transition-colors">
+                    <a href="https://github.com/Jubilee-Protocol/jBTCi-on-Base" target="_blank" rel="noopener noreferrer">
                         GitHub
                     </a>
                 </div>
