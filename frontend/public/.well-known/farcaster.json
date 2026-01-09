@@ -1,0 +1,39 @@
+{
+    "accountAssociation": {
+        "header": "PLACEHOLDER_HEADER",
+        "payload": "PLACEHOLDER_PAYLOAD",
+        "signature": "PLACEHOLDER_SIGNATURE"
+    },
+    "frame": {
+        "version": "1",
+        "name": "jBTCi",
+        "homeUrl": "https://mint.jbtci.xyz",
+        "iconUrl": "https://mint.jbtci.xyz/jubilee-logo-pink.png",
+        "splashImageUrl": "https://mint.jbtci.xyz/splash.png",
+        "splashBackgroundColor": "#0a0a1a"
+    },
+    "miniapp": {
+        "version": "1",
+        "name": "jBTCi - Bitcoin Index",
+        "subtitle": "Automated BTC Yield on Base",
+        "description": "The first Bitcoin Index Fund on Base. Deposit cbBTC and earn automated yield from WBTC/cbBTC rebalancing. Powered by Yearn V3.",
+        "iconUrl": "https://mint.jbtci.xyz/jubilee-logo-pink.png",
+        "splashImageUrl": "https://mint.jbtci.xyz/splash.png",
+        "splashBackgroundColor": "#0a0a1a",
+        "homeUrl": "https://mint.jbtci.xyz",
+        "primaryCategory": "finance",
+        "tags": [
+            "bitcoin",
+            "defi",
+            "yield",
+            "base",
+            "vault",
+            "index"
+        ],
+        "heroImageUrl": "https://mint.jbtci.xyz/og-image.png",
+        "tagline": "Diversified Bitcoin, Automated Yield",
+        "ogTitle": "jBTCi - Bitcoin Index Fund on Base",
+        "ogDescription": "Earn 6-10% APY from automated WBTC/cbBTC rebalancing",
+        "ogImageUrl": "https://mint.jbtci.xyz/og-image.png"
+    }
+}
