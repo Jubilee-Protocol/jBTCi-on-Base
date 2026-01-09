@@ -189,6 +189,21 @@ function Toast({ message, type, onClose }: { message: string; type: 'success' | 
     );
 }
 
+// Skeleton loader component for loading states
+function Skeleton({ width = '60px', height = '18px' }: { width?: string; height?: string }) {
+    return (
+        <div style={{
+            width,
+            height,
+            background: 'linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%)',
+            backgroundSize: '200% 100%',
+            animation: 'shimmer 1.5s infinite',
+            borderRadius: '4px',
+            display: 'inline-block',
+        }} />
+    );
+}
+
 // Transaction history type
 interface TxHistoryItem {
     type: 'deposit' | 'withdraw';
@@ -346,11 +361,15 @@ export default function Home() {
     const strategyAddress = contracts.strategy as `0x${string}`;
     const cbBTCAddress = contracts.cbBTC as `0x${string}`;
 
-    // Read contract data
-    const { data: strategyStatus, refetch: refetchStatus } = useReadContract({
+    // Read contract data with stale-while-revalidate caching
+    const { data: strategyStatus, refetch: refetchStatus, isLoading: isLoadingStatus } = useReadContract({
         address: strategyAddress,
         abi: STRATEGY_ABI,
         functionName: 'getStrategyStatus',
+        query: {
+            staleTime: 30_000, // Cache for 30 seconds
+            gcTime: 60_000, // Keep in cache for 1 minute
+        },
     });
 
     const { data: cbBTCBalance, refetch: refetchCbBTC } = useReadContract({
@@ -584,6 +603,10 @@ export default function Home() {
                 @keyframes slideIn {
                     from { transform: translateX(100%); opacity: 0; }
                     to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes shimmer {
+                    0% { background-position: -200% 0; }
+                    100% { background-position: 200% 0; }
                 }
             `}</style>
 
@@ -931,7 +954,9 @@ export default function Home() {
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', marginTop: '24px' }}>
                             <div style={{ background: c.card, borderRadius: '12px', padding: '12px', textAlign: 'center', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', border: `1px solid ${c.cardBorder}` }}>
                                 <div style={{ fontSize: '10px', color: c.textLight, textTransform: 'uppercase', marginBottom: '4px' }}>TVL</div>
-                                <div style={{ fontSize: '14px', fontWeight: '600', color: c.text }}>{totalHoldings.toFixed(2)}</div>
+                                <div style={{ fontSize: '14px', fontWeight: '600', color: c.text }}>
+                                    {isLoadingStatus ? <Skeleton width="50px" /> : totalHoldings.toFixed(2)}
+                                </div>
                             </div>
                             <div style={{ background: c.card, borderRadius: '12px', padding: '12px', textAlign: 'center', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', border: `1px solid ${c.cardBorder}` }}>
                                 <div style={{ fontSize: '10px', color: c.textLight, textTransform: 'uppercase', marginBottom: '4px' }}>APY</div>
@@ -939,11 +964,15 @@ export default function Home() {
                             </div>
                             <div style={{ background: c.card, borderRadius: '12px', padding: '12px', textAlign: 'center', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', border: `1px solid ${c.cardBorder}` }}>
                                 <div style={{ fontSize: '10px', color: c.textLight, textTransform: 'uppercase', marginBottom: '4px' }}>WBTC</div>
-                                <div style={{ fontSize: '14px', fontWeight: '600', color: '#FFA500' }}>{wbtcPercent.toFixed(0)}%</div>
+                                <div style={{ fontSize: '14px', fontWeight: '600', color: '#FFA500' }}>
+                                    {isLoadingStatus ? <Skeleton width="40px" /> : `${wbtcPercent.toFixed(0)}%`}
+                                </div>
                             </div>
                             <div style={{ background: c.card, borderRadius: '12px', padding: '12px', textAlign: 'center', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', border: `1px solid ${c.cardBorder}` }}>
                                 <div style={{ fontSize: '10px', color: c.textLight, textTransform: 'uppercase', marginBottom: '4px' }}>cbBTC</div>
-                                <div style={{ fontSize: '14px', fontWeight: '600', color: '#0052FF' }}>{cbbtcPercent.toFixed(0)}%</div>
+                                <div style={{ fontSize: '14px', fontWeight: '600', color: '#0052FF' }}>
+                                    {isLoadingStatus ? <Skeleton width="40px" /> : `${cbbtcPercent.toFixed(0)}%`}
+                                </div>
                             </div>
                         </div>
 
