@@ -2,10 +2,11 @@
 
 import Image from 'next/image';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { useAccount, useReadContract, useWriteContract, useChainId, useWaitForTransactionReceipt } from 'wagmi';
+import { useAccount, useReadContract, useWriteContract, useChainId, useWaitForTransactionReceipt, useConnect } from 'wagmi';
 import { useState, useEffect, useCallback } from 'react';
 import { formatUnits, parseUnits } from 'viem';
 import { CONTRACTS } from '../config';
+import { useIsMiniApp, useMiniAppReady } from './hooks/useMiniApp';
 
 // Min deposit constant
 const MIN_DEPOSIT_BTC = 0.01;
@@ -199,6 +200,7 @@ interface TxHistoryItem {
 export default function Home() {
     const { address, isConnected } = useAccount();
     const chainId = useChainId();
+    const { connectors, connect } = useConnect();
     const [depositAmount, setDepositAmount] = useState('');
     const [activeTab, setActiveTab] = useState<'deposit' | 'withdraw'>('deposit');
     const [hasAcceptedTerms, setHasAcceptedTerms] = useState(false);
@@ -209,6 +211,28 @@ export default function Home() {
     const [theme, setTheme] = useState<Theme>('light');
     const [showHistory, setShowHistory] = useState(false);
     const [txHistory, setTxHistory] = useState<TxHistoryItem[]>([]);
+
+    // Mini app detection and frame readiness
+    const isMiniApp = useIsMiniApp();
+    useMiniAppReady();
+
+    // Auto-connect in mini app context (try Coinbase/injected wallet)
+    useEffect(() => {
+        if (isMiniApp && !isConnected && connectors.length > 0) {
+            // Try to find and auto-connect with injected or Coinbase wallet
+            const coinbaseConnector = connectors.find(c => c.name.toLowerCase().includes('coinbase'));
+            const injectedConnector = connectors.find(c => c.name.toLowerCase().includes('injected'));
+            const targetConnector = coinbaseConnector || injectedConnector || connectors[0];
+
+            if (targetConnector) {
+                // Delay to allow frame to initialize
+                const timer = setTimeout(() => {
+                    connect({ connector: targetConnector });
+                }, 500);
+                return () => clearTimeout(timer);
+            }
+        }
+    }, [isMiniApp, isConnected, connectors, connect]);
 
     // Get theme colors
     const c = colors[theme];
