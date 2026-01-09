@@ -33,6 +33,9 @@ export const metadata: Metadata = {
         description: 'The first Bitcoin Index Fund on Base. Earn 6-10% APY on diversified BTC exposure.',
         images: ['https://mint.jbtci.xyz/og-image.png'],
     },
+    other: {
+        'base:app_id': '6960e2c68a6eeb04b568d951',
+    },
 };
 
 export default function RootLayout({
