@@ -34,6 +34,9 @@
         "ogTitle": "jBTCi - BTC Index on Base",
         "ogDescription": "Earn 6-10% APY from automated WBTC/cbBTC rebalancing",
         "ogImageUrl": "https://mint.jbtci.xyz/og-image.png",
-        "noindex": false
+        "noindex": false,
+        "screenshotUrls": [
+            "https://mint.jbtci.xyz/screenshot-1.png"
+        ]
     }
 }
