@@ -27,13 +27,13 @@
             "defi",
             "yield",
             "base",
-            "vault",
-            "index"
+            "vault"
         ],
         "heroImageUrl": "https://mint.jbtci.xyz/og-image.png",
-        "tagline": "Diversified Bitcoin, Automated Yield",
-        "ogTitle": "jBTCi - Bitcoin Index Fund on Base",
+        "tagline": "BTC Index with Auto Yield",
+        "ogTitle": "jBTCi - BTC Index on Base",
         "ogDescription": "Earn 6-10% APY from automated WBTC/cbBTC rebalancing",
-        "ogImageUrl": "https://mint.jbtci.xyz/og-image.png"
+        "ogImageUrl": "https://mint.jbtci.xyz/og-image.png",
+        "noindex": false
     }
 }
