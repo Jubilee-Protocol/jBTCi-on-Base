@@ -10,6 +10,7 @@
     },
     "dependencies": {
         "@farcaster/frame-wagmi-connector": "^1.0.0",
+        "@farcaster/miniapp-sdk": "^0.2.1",
         "@farcaster/miniapp-wagmi-connector": "^1.1.0",
         "@rainbow-me/rainbowkit": "^2.1.0",
         "@tailwindcss/postcss": "^4.1.18",

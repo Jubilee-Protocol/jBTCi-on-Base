@@ -2,6 +2,17 @@
 
 import { useEffect, useState } from 'react';
 
+// Dynamically import the Farcaster SDK to avoid SSR issues
+let sdkPromise: Promise<any> | null = null;
+
+const getSdk = async () => {
+    if (typeof window === 'undefined') return null;
+    if (!sdkPromise) {
+        sdkPromise = import('@farcaster/miniapp-sdk').then(m => m.sdk);
+    }
+    return sdkPromise;
+};
+
 /**
  * Hook to detect if app is running inside a Farcaster mini app context (Base App, Warpcast, etc.)
  * Returns true if running in mini app, false otherwise
@@ -10,8 +21,6 @@ export function useIsMiniApp(): boolean {
     const [isMiniApp, setIsMiniApp] = useState(false);
 
     useEffect(() => {
-        // Check for Farcaster frame context
-        // Mini apps are loaded in an iframe with specific parent context
         const checkMiniAppContext = () => {
             try {
                 // Check if we're in an iframe (mini apps run in iframes)
@@ -43,18 +52,27 @@ export function useIsMiniApp(): boolean {
 }
 
 /**
- * Hook to signal that the mini app frame is ready
- * Call this after your app has finished loading
+ * Hook to signal that the mini app frame is ready using Farcaster SDK
+ * This hides the splash screen and shows the app
  */
 export function useMiniAppReady() {
     useEffect(() => {
-        // Signal to parent frame that we're ready
-        if (typeof window !== 'undefined' && window.parent !== window) {
+        const signalReady = async () => {
             try {
-                window.parent.postMessage({ type: 'frame-ready' }, '*');
+                const sdk = await getSdk();
+                if (sdk?.actions?.ready) {
+                    // Use the official Farcaster SDK ready signal
+                    await sdk.actions.ready();
+                    console.log('[MiniApp] Ready signal sent via Farcaster SDK');
+                } else {
+                    // Fallback for non-mini-app context
+                    console.log('[MiniApp] Not in mini app context, skipping ready signal');
+                }
             } catch (e) {
-                // Ignore cross-origin errors
+                console.warn('[MiniApp] Error signaling ready:', e);
             }
-        }
+        };
+
+        signalReady();
     }, []);
 }
