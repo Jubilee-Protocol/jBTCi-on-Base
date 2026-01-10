@@ -1,11 +1,35 @@
-import { http } from 'wagmi'
+import { http, createConfig } from 'wagmi'
 import { base, baseSepolia } from 'wagmi/chains'
-import { getDefaultConfig } from '@rainbow-me/rainbowkit'
+import { connectorsForWallets, getDefaultConfig } from '@rainbow-me/rainbowkit'
+import {
+    rainbowWallet,
+    walletConnectWallet,
+    coinbaseWallet,
+    metaMaskWallet
+} from '@rainbow-me/rainbowkit/wallets'
+import { farcasterMiniApp } from '@farcaster/miniapp-wagmi-connector'
 
-export const config = getDefaultConfig({
-    appName: 'jBTCi - Jubilee Bitcoin Index',
-    projectId: '6f385306b6aa92e6c664d8e5759748c2',
+// Create connectors with Farcaster mini app support
+const connectors = connectorsForWallets(
+    [
+        {
+            groupName: 'Recommended',
+            wallets: [coinbaseWallet, metaMaskWallet, rainbowWallet, walletConnectWallet],
+        },
+    ],
+    {
+        appName: 'jBTCi - Jubilee Bitcoin Index',
+        projectId: '6f385306b6aa92e6c664d8e5759748c2',
+    }
+)
+
+// Create config with Farcaster connector + RainbowKit wallets
+export const config = createConfig({
     chains: [base, baseSepolia],
+    connectors: [
+        farcasterMiniApp(), // Farcaster mini app connector (auto-connects in Base App)
+        ...connectors,
+    ],
     transports: {
         [base.id]: http('https://mainnet.base.org'),
         [baseSepolia.id]: http('https://sepolia.base.org'),
