@@ -35,6 +35,20 @@ export const metadata: Metadata = {
     },
     other: {
         'base:app_id': '6960e2c68a6eeb04b568d951',
+        'fc:miniapp': JSON.stringify({
+            version: 'next',
+            imageUrl: 'https://mint.jbtci.xyz/og-image.png',
+            button: {
+                title: 'Open jBTCi',
+                action: {
+                    type: 'launch_frame',
+                    url: 'https://mint.jbtci.xyz',
+                    name: 'jBTCi - Bitcoin Index',
+                    splashImageUrl: 'https://mint.jbtci.xyz/splash.png',
+                    splashBackgroundColor: '#0a0a1a'
+                }
+            }
+        }),
     },
 };
 
