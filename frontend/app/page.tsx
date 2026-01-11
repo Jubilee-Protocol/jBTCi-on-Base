@@ -361,15 +361,11 @@ export default function Home() {
     const strategyAddress = contracts.strategy as `0x${string}`;
     const cbBTCAddress = contracts.cbBTC as `0x${string}`;
 
-    // Read contract data with stale-while-revalidate caching
+    // Read contract data
     const { data: strategyStatus, refetch: refetchStatus, isLoading: isLoadingStatus } = useReadContract({
         address: strategyAddress,
         abi: STRATEGY_ABI,
         functionName: 'getStrategyStatus',
-        query: {
-            staleTime: 30_000, // Cache for 30 seconds
-            gcTime: 60_000, // Keep in cache for 1 minute
-        },
     });
 
     const { data: cbBTCBalance, refetch: refetchCbBTC } = useReadContract({
@@ -461,14 +457,37 @@ export default function Home() {
     };
 
     // Refetch balances after successful transactions
+    // Refetch balances after successful transactions with retry logic
+    // This handles cases where RPC nodes might be slightly out of sync
+    const refetchAll = useCallback(() => {
+        refetchCbBTC();
+        refetchJBTCi();
+        refetchStatus();
+        refetchAllowance();
+    }, [refetchCbBTC, refetchJBTCi, refetchStatus, refetchAllowance]);
+
     useEffect(() => {
         if (isDepositSuccess || isRedeemSuccess) {
-            refetchCbBTC();
-            refetchJBTCi();
-            refetchStatus();
-            refetchAllowance();
+            // Immediate refetch
+            refetchAll();
+
+            // Refetch after delays to ensure indexers catch up
+            const t1 = setTimeout(refetchAll, 2000);
+            const t2 = setTimeout(refetchAll, 5000);
+
+            // Clear input and show success message
+            setDepositAmount('');
+            setToast({
+                message: isDepositSuccess ? 'Deposit successful! Balances updating...' : 'Withdraw successful! Balances updating...',
+                type: 'success'
+            });
+
+            return () => {
+                clearTimeout(t1);
+                clearTimeout(t2);
+            };
         }
-    }, [isDepositSuccess, isRedeemSuccess]);
+    }, [isDepositSuccess, isRedeemSuccess, refetchAll]);
 
     const isLoading = isApproving || isDepositing || isRedeeming || isApproveConfirming || isDepositConfirming || isRedeemConfirming;
 
