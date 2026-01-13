@@ -1053,8 +1053,8 @@ export default function Home() {
 
                         {/* Status & Links */}
                         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px', marginTop: '20px', fontSize: '14px', flexWrap: 'wrap' }}>
-                            <span style={{ color: strategyStatus?.isPaused ? '#EF4444' : '#22C55E' }}>
-                                ● {strategyStatus?.isPaused ? 'Paused' : 'Active'}
+                            <span style={{ color: MAINTENANCE_MODE ? '#F59E0B' : (strategyStatus?.isPaused ? '#EF4444' : '#22C55E') }}>
+                                ● {MAINTENANCE_MODE ? 'Maintenance' : (strategyStatus?.isPaused ? 'Paused' : 'Active')}
                             </span>
                             <a href="https://basescan.org/address/0x7d0Ae1Fa145F3d5B511262287fF686C25000816D" target="_blank" rel="noopener noreferrer" style={{ color: c.textLight }}>
                                 Contract ↗
@@ -1064,6 +1064,9 @@ export default function Home() {
                             </a>
                             <a href="https://github.com/Jubilee-Protocol/jBTCi-on-Base/blob/main/docs/FAQ.md" target="_blank" rel="noopener noreferrer" style={{ color: c.textLight }}>
                                 FAQ ↗
+                            </a>
+                            <a href="https://github.com/Jubilee-Protocol/jBTCi-on-Base#readme" target="_blank" rel="noopener noreferrer" style={{ color: c.textLight }}>
+                                Learn More ↗
                             </a>
                             <button
                                 onClick={reopenTutorial}
@@ -1078,9 +1081,6 @@ export default function Home() {
                             >
                                 📚 Tutorial
                             </button>
-                            <a href="https://github.com/Jubilee-Protocol/jBTCi-on-Base#readme" target="_blank" rel="noopener noreferrer" style={{ color: c.textLight }}>
-                                Learn More ↗
-                            </a>
                             <a
                                 href="https://discord.gg/yBhdxtMB"
                                 target="_blank"

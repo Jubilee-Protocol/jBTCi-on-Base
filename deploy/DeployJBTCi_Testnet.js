@@ -129,20 +129,7 @@ async function main() {
     // 5. DEPLOY STRATEGY
     // ============================================
     console.log("\n⏳ Deploying YearnJBTCiStrategy...");
-
-    // Debug: Verify pool token addresses before deployment
-    console.log("  🔍 Verifying pool token addresses...");
-    const pool1Token0 = await poolWbtcEth.token0();
-    const pool1Token1 = await poolWbtcEth.token1();
-    console.log(`  WBTC/ETH Pool: token0=${pool1Token0}, token1=${pool1Token1}`);
-    console.log(`  Expected WBTC: ${wbtcAddr}`);
-    console.log(`  Match: ${pool1Token0 === wbtcAddr || pool1Token1 === wbtcAddr}`);
-
-    const pool2Token0 = await poolCbbtcUsdc.token0();
-    const pool2Token1 = await poolCbbtcUsdc.token1();
-    console.log(`  cbBTC/USDC Pool: token0=${pool2Token0}, token1=${pool2Token1}`);
-    console.log(`  Expected cbBTC: ${cbbtcAddr}`);
-    console.log(`  Match: ${pool2Token0 === cbbtcAddr || pool2Token1 === cbbtcAddr}`);
+    console.log("  Using TokenizedStrategy impl:", await provider.getCode("0x4FEFcCf08c65AD172C57b62d046edd838e1f1d69").then(c => c.length > 2 ? "✅ Found" : "❌ Missing"));
 
     const STRATEGY_NAME = "Jubilee Bitcoin Index (Testnet)";
 
