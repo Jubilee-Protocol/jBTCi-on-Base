@@ -507,6 +507,7 @@ export default function Home() {
                 isOpen={showTutorial}
                 onClose={completeTutorial}
                 theme={theme}
+                btcPrice={btcPrice}
             />
         );
     }

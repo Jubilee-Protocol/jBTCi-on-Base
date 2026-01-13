@@ -6,6 +6,7 @@ interface TutorialModalProps {
     isOpen: boolean;
     onClose: () => void;
     theme: 'light' | 'dark';
+    btcPrice: number;
 }
 
 type TutorialStep = 1 | 2 | 3 | 4;
@@ -45,8 +46,9 @@ export function useTutorial() {
     };
 }
 
-export function TutorialModal({ isOpen, onClose, theme }: TutorialModalProps) {
+export function TutorialModal({ isOpen, onClose, theme, btcPrice }: TutorialModalProps) {
     const [step, setStep] = useState<TutorialStep>(1);
+    const minDepositUSD = (0.01 * btcPrice).toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
 
     const c = theme === 'dark' ? {
         bg: 'rgba(20, 20, 35, 0.98)',
@@ -229,7 +231,7 @@ export function TutorialModal({ isOpen, onClose, theme }: TutorialModalProps) {
                                 padding: '16px',
                             }}>
                                 <p style={{ margin: 0, color: theme === 'dark' ? '#FCD34D' : '#92400E', fontSize: '14px' }}>
-                                    <strong>Minimum deposit:</strong> 0.01 BTC (~$970)
+                                    <strong>Minimum deposit:</strong> 0.01 BTC ({minDepositUSD})
                                 </p>
                             </div>
                         </div>
