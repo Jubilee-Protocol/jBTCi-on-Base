@@ -11,6 +11,11 @@ import { useIsMiniApp, useMiniAppReady } from './hooks/useMiniApp';
 // Min deposit constant
 const MIN_DEPOSIT_BTC = 0.01;
 
+// MAINTENANCE MODE - Set to true to disable deposits/withdraws
+// Remove this once the new strategy is deployed
+const MAINTENANCE_MODE = true;
+const MAINTENANCE_MESSAGE = "jBTCi is undergoing scheduled maintenance. Deposits and withdrawals are temporarily disabled. Your funds are safe.";
+
 // Strategy ABI - deposit, redeem, convertToAssets, and status
 const STRATEGY_ABI = [
     {
@@ -679,6 +684,30 @@ export default function Home() {
                             boxShadow: '0 4px 24px rgba(0, 82, 255, 0.08)',
                             border: `1px solid ${c.cardBorder}`
                         }}>
+                            {/* Maintenance Mode Banner */}
+                            {MAINTENANCE_MODE && (
+                                <div style={{
+                                    background: 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)',
+                                    border: '1px solid #F59E0B',
+                                    borderRadius: '12px',
+                                    padding: '16px',
+                                    marginBottom: '24px',
+                                    display: 'flex',
+                                    alignItems: 'flex-start',
+                                    gap: '12px'
+                                }}>
+                                    <span style={{ fontSize: '20px' }}>🔧</span>
+                                    <div>
+                                        <div style={{ fontWeight: '600', color: '#92400E', marginBottom: '4px' }}>
+                                            Scheduled Maintenance
+                                        </div>
+                                        <div style={{ fontSize: '13px', color: '#A16207', lineHeight: '1.4' }}>
+                                            {MAINTENANCE_MESSAGE}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
                             {/* Tabs */}
                             <div style={{ display: 'flex', gap: '32px', marginBottom: '32px', borderBottom: `1px solid ${c.cardBorder}`, paddingBottom: '16px' }}>
                                 <button
@@ -926,7 +955,7 @@ export default function Home() {
                                 ) : (
                                     <button
                                         onClick={activeTab === 'deposit' ? handleDeposit : handleWithdraw}
-                                        disabled={isLoading || !depositAmount || parseFloat(depositAmount) <= 0}
+                                        disabled={isLoading || !depositAmount || parseFloat(depositAmount) <= 0 || MAINTENANCE_MODE}
                                         style={{
                                             width: '100%',
                                             padding: '18px',
