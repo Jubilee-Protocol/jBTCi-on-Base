@@ -166,4 +166,4 @@ address public constant tokenizedStrategyAddress =
 
 ---
 
-*Built by [Jubilee Labs](https://jubileelabs.xyz) • Powered by Yearn V3*
+*Built by [Jubilee Labs](https://jubileelabs.xyz) • All glory to Jesus*
