@@ -7,6 +7,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { formatUnits, parseUnits } from 'viem';
 import { CONTRACTS } from '../config';
 import { useIsMiniApp, useMiniAppReady } from './hooks/useMiniApp';
+import { TutorialModal, useTutorial } from './components/TutorialModal';
 
 // Min deposit constant
 const MIN_DEPOSIT_BTC = 0.01;
@@ -235,6 +236,9 @@ export default function Home() {
     // Mini app detection and frame readiness
     const isMiniApp = useIsMiniApp();
     useMiniAppReady();
+
+    // Tutorial for first-time visitors
+    const { showTutorial, completeTutorial, reopenTutorial } = useTutorial();
 
     // Auto-connect in mini app context (try Coinbase/injected wallet)
     useEffect(() => {
@@ -495,6 +499,17 @@ export default function Home() {
     }, [isDepositSuccess, isRedeemSuccess, refetchAll]);
 
     const isLoading = isApproving || isDepositing || isRedeeming || isApproveConfirming || isDepositConfirming || isRedeemConfirming;
+
+    // Tutorial Modal - Shows for first-time visitors BEFORE terms
+    if (showTutorial) {
+        return (
+            <TutorialModal
+                isOpen={showTutorial}
+                onClose={completeTutorial}
+                theme={theme}
+            />
+        );
+    }
 
     // Terms Modal - Light theme with Hundredfold Foundation
     if (showTermsModal && !hasAcceptedTerms) {
@@ -1050,6 +1065,19 @@ export default function Home() {
                             <a href="https://github.com/Jubilee-Protocol/jBTCi-on-Base/blob/main/docs/FAQ.md" target="_blank" rel="noopener noreferrer" style={{ color: c.textLight }}>
                                 FAQ ↗
                             </a>
+                            <button
+                                onClick={reopenTutorial}
+                                style={{
+                                    background: 'transparent',
+                                    border: 'none',
+                                    color: c.textLight,
+                                    cursor: 'pointer',
+                                    fontSize: '14px',
+                                    padding: 0,
+                                }}
+                            >
+                                📚 Tutorial
+                            </button>
                             <a href="https://github.com/Jubilee-Protocol/jBTCi-on-Base#readme" target="_blank" rel="noopener noreferrer" style={{ color: c.textLight }}>
                                 Learn More ↗
                             </a>
