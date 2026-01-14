@@ -198,11 +198,11 @@ export function TreasuryMode({ isOpen, onClose, theme }: TreasuryModeProps) {
                             </h3>
 
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '20px' }}>
-                                <Step num={1} text="Go to app.safe.global" theme={theme} />
-                                <Step num={2} text="Open your Safe on Base" theme={theme} />
-                                <Step num={3} text="Click 'Apps' in the sidebar" theme={theme} />
-                                <Step num={4} text="Search for 'WalletConnect'" theme={theme} />
-                                <Step num={5} text="Use WalletConnect to connect to jBTCi" theme={theme} />
+                                <Step num={1} text="Open mint.jbtci.xyz in a browser" theme={theme} />
+                                <Step num={2} text="Click 'Connect Wallet'" theme={theme} />
+                                <Step num={3} text="Select 'WalletConnect'" theme={theme} />
+                                <Step num={4} text="Copy the pairing code (wc:...)" theme={theme} />
+                                <Step num={5} text="Paste into Safe's WalletConnect" theme={theme} />
                             </div>
 
                             <div style={{
@@ -213,7 +213,7 @@ export function TreasuryMode({ isOpen, onClose, theme }: TreasuryModeProps) {
                                 marginBottom: '16px',
                             }}>
                                 <p style={{ margin: 0, color: theme === 'dark' ? '#FCD34D' : '#92400E', fontSize: '13px' }}>
-                                    💡 <strong>Tip:</strong> Copy jBTCi's URL (mint.jbtci.xyz) and paste it in Safe's WalletConnect.
+                                    💡 <strong>Important:</strong> Use a normal browser (not Safe's browser) to get the WalletConnect pairing code, then paste it in Safe → Apps → WalletConnect.
                                 </p>
                             </div>
 
