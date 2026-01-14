@@ -48,7 +48,7 @@ jBTCi maintains a 50/50 allocation between WBTC and cbBTC, automatically rebalan
 
 ## Security
 
-- **Audit Score**: 97/100 ⭐⭐⭐⭐⭐
+- **Audit Score**: 94/100 ⭐⭐⭐⭐⭐
 - See [docs/AUDIT_REPORT.md](docs/AUDIT_REPORT.md) for details
 
 ---
