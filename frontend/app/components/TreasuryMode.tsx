@@ -197,23 +197,27 @@ export function TreasuryMode({ isOpen, onClose, theme }: TreasuryModeProps) {
                                 Connect Your Safe Wallet
                             </h3>
 
+                            <p style={{ color: c.textMuted, fontSize: '14px', lineHeight: 1.5, marginBottom: '16px' }}>
+                                Use Safe's built-in browser to access jBTCi directly:
+                            </p>
+
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '20px' }}>
-                                <Step num={1} text="Open mint.jbtci.xyz in a browser" theme={theme} />
-                                <Step num={2} text="Click 'Connect Wallet'" theme={theme} />
-                                <Step num={3} text="Select 'WalletConnect'" theme={theme} />
-                                <Step num={4} text="Copy the pairing code (wc:...)" theme={theme} />
-                                <Step num={5} text="Paste into Safe's WalletConnect" theme={theme} />
+                                <Step num={1} text="Open app.safe.global" theme={theme} />
+                                <Step num={2} text="Select your Safe on Base" theme={theme} />
+                                <Step num={3} text="Click 'Apps' in left sidebar" theme={theme} />
+                                <Step num={4} text="Click 'My custom apps' tab" theme={theme} />
+                                <Step num={5} text="Add: https://mint.jbtci.xyz" theme={theme} />
                             </div>
 
                             <div style={{
-                                background: theme === 'dark' ? '#0d0d1a' : '#FEF3C7',
-                                border: `1px solid ${theme === 'dark' ? '#2a2a3e' : '#F59E0B'}`,
+                                background: theme === 'dark' ? '#0d0d1a' : '#E8F5E9',
+                                border: `1px solid ${theme === 'dark' ? '#2a2a3e' : '#4CAF50'}`,
                                 borderRadius: '12px',
                                 padding: '14px',
                                 marginBottom: '16px',
                             }}>
-                                <p style={{ margin: 0, color: theme === 'dark' ? '#FCD34D' : '#92400E', fontSize: '13px' }}>
-                                    💡 <strong>Important:</strong> Use a normal browser (not Safe's browser) to get the WalletConnect pairing code, then paste it in Safe → Apps → WalletConnect.
+                                <p style={{ margin: 0, color: theme === 'dark' ? '#81C784' : '#2E7D32', fontSize: '13px' }}>
+                                    ✅ <strong>Safe will connect automatically</strong> when you open jBTCi from within the Safe app!
                                 </p>
                             </div>
 
