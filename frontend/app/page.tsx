@@ -500,19 +500,7 @@ export default function Home() {
 
     const isLoading = isApproving || isDepositing || isRedeeming || isApproveConfirming || isDepositConfirming || isRedeemConfirming;
 
-    // Tutorial Modal - Shows for first-time visitors BEFORE terms
-    if (showTutorial) {
-        return (
-            <TutorialModal
-                isOpen={showTutorial}
-                onClose={completeTutorial}
-                theme={theme}
-                btcPrice={btcPrice}
-            />
-        );
-    }
-
-    // Terms Modal - Light theme with Hundredfold Foundation
+    // Terms Modal - Must accept BEFORE seeing tutorial or app
     if (showTermsModal && !hasAcceptedTerms) {
         return (
             <div style={{
@@ -630,6 +618,18 @@ export default function Home() {
                     </p>
                 </div>
             </div>
+        );
+    }
+
+    // Tutorial Modal - Shows for first-time visitors AFTER accepting terms
+    if (showTutorial) {
+        return (
+            <TutorialModal
+                isOpen={showTutorial}
+                onClose={completeTutorial}
+                theme={theme}
+                btcPrice={btcPrice}
+            />
         );
     }
 
