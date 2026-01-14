@@ -931,7 +931,7 @@ export default function Home() {
 
                                 {/* Min deposit + Get cbBTC hint */}
                                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: c.textLight, padding: '0 8px' }}>
-                                    <span>Min. deposit: {MIN_DEPOSIT_BTC} BTC ≈ ${(MIN_DEPOSIT_BTC * btcPrice).toFixed(0)}</span>
+                                    <span>Min. deposit: {MIN_DEPOSIT_BTC} BTC ≈ ${(MIN_DEPOSIT_BTC * btcPrice).toLocaleString()}</span>
                                     <a
                                         href="https://app.uniswap.org/swap?chain=base&outputCurrency=0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf"
                                         target="_blank"
@@ -940,6 +940,9 @@ export default function Home() {
                                     >
                                         Get cbBTC →
                                     </a>
+                                </div>
+                                <div style={{ fontSize: '10px', color: c.textLight, opacity: 0.7, textAlign: 'center', marginTop: '4px' }}>
+                                    Price by <a href="https://www.coingecko.com/" target="_blank" rel="noopener noreferrer" style={{ color: c.textLight, textDecoration: 'underline' }}>CoinGecko</a>
                                 </div>
 
                                 {/* Action Button */}

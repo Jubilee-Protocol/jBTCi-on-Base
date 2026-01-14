@@ -233,6 +233,9 @@ export function TutorialModal({ isOpen, onClose, theme, btcPrice }: TutorialModa
                                 <p style={{ margin: 0, color: theme === 'dark' ? '#FCD34D' : '#92400E', fontSize: '14px' }}>
                                     <strong>Minimum deposit:</strong> 0.01 BTC ({minDepositUSD})
                                 </p>
+                                <p style={{ margin: '8px 0 0', fontSize: '11px', color: theme === 'dark' ? '#a0a0b0' : '#78716c' }}>
+                                    Price by <a href="https://www.coingecko.com/" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline' }}>CoinGecko</a>
+                                </p>
                             </div>
                         </div>
                     )}
