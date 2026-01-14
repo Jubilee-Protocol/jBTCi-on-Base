@@ -44,7 +44,7 @@ jBTCi is a product of Jubilee Protocol, governed by Hundredfold Foundation and d
 4. Confirm the transaction in your wallet
 
 ## How can I contact the team?
-For questions, partnerships, or support, email us at **contact@jubileeprotocol.xyz** or join our [Discord](https://discord.gg/yBhdxtMB).
+For questions, partnerships, or support, email us at **contact@jubileeprotocol.xyz**.
 
 ## Where can I learn more?
 - [GitHub Repository](https://github.com/Jubilee-Protocol/jBTCi-on-Base)
