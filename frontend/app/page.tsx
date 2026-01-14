@@ -9,6 +9,7 @@ import { CONTRACTS } from '../config';
 import { useIsMiniApp, useMiniAppReady } from './hooks/useMiniApp';
 import { TutorialModal, useTutorial } from './components/TutorialModal';
 import { FASBDashboard } from './components/FASBDashboard';
+import { TreasuryMode } from './components/TreasuryMode';
 
 // Min deposit constant
 const MIN_DEPOSIT_BTC = 0.01;
@@ -233,6 +234,7 @@ export default function Home() {
     const [theme, setTheme] = useState<Theme>('light');
     const [showHistory, setShowHistory] = useState(false);
     const [showFASBDashboard, setShowFASBDashboard] = useState(false);
+    const [showTreasuryMode, setShowTreasuryMode] = useState(false);
     const [txHistory, setTxHistory] = useState<TxHistoryItem[]>([]);
 
     // Mini app detection and frame readiness
@@ -661,6 +663,13 @@ export default function Home() {
                 onClose={() => setShowFASBDashboard(false)}
                 theme={theme}
                 btcPrice={btcPrice}
+            />
+
+            {/* Treasury Mode Modal */}
+            <TreasuryMode
+                isOpen={showTreasuryMode}
+                onClose={() => setShowTreasuryMode(false)}
+                theme={theme}
             />
 
             <main style={getGradientStyle(theme)} className="flex flex-col">
@@ -1103,6 +1112,19 @@ export default function Home() {
                             <a href="https://github.com/Jubilee-Protocol/jBTCi-on-Base#readme" target="_blank" rel="noopener noreferrer" style={{ color: c.textLight }}>
                                 Learn More ↗
                             </a>
+                            <button
+                                onClick={() => setShowTreasuryMode(true)}
+                                style={{
+                                    background: 'transparent',
+                                    border: 'none',
+                                    color: c.textLight,
+                                    cursor: 'pointer',
+                                    fontSize: '14px',
+                                    padding: 0,
+                                }}
+                            >
+                                🏛️ Treasury
+                            </button>
                             <button
                                 onClick={reopenTutorial}
                                 style={{
