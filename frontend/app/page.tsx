@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount, useReadContract, useWriteContract, useChainId, useWaitForTransactionReceipt, useConnect } from 'wagmi';
 import { useState, useEffect, useCallback } from 'react';
 import { formatUnits, parseUnits } from 'viem';
@@ -9,7 +10,6 @@ import { useIsMiniApp, useMiniAppReady } from './hooks/useMiniApp';
 import { TutorialModal, useTutorial } from './components/TutorialModal';
 import { FASBDashboard } from './components/FASBDashboard';
 import { TreasuryMode } from './components/TreasuryMode';
-import { CustomConnectButton } from './components/CustomConnectButton';
 
 // Min deposit constant
 const MIN_DEPOSIT_BTC = 0.01;
@@ -745,7 +745,7 @@ export default function Home() {
                             🏛️
                         </button>
                         {/* Connect Wallet */}
-                        <CustomConnectButton theme={theme} />
+                        <ConnectButton />
                     </div>
                 </header>
 
