@@ -22,6 +22,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -30,6 +31,7 @@ body {
   background: var(--white);
   color: var(--text-dark);
   font-family: 'Work Sans', system-ui, -apple-system, sans-serif;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Gradient background with Base blue, white, and Jubilee pink */
@@ -174,6 +176,14 @@ input[type="number"]::-webkit-outer-spin-button {
     right: 16px !important;
     bottom: 16px !important;
     max-width: none !important;
+  }
+
+  /* RainbowKit modal containment on mobile */
+  [data-rk] div[role="dialog"],
+  [data-rk] [data-testid="rk-account-modal"] {
+    max-width: calc(100vw - 32px) !important;
+    max-height: 80vh !important;
+    overflow: auto !important;
   }
 }
 

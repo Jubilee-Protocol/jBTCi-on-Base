@@ -684,26 +684,26 @@ export default function Home() {
                         <Image src="/jubilee-logo-pink.png" alt="Jubilee" width={32} height={32} />
                         <span style={{ fontSize: '22px', fontWeight: 'bold', color: c.text }}>jBTCi</span>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                        {/* Reports button */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'nowrap' }}>
+                        {/* Reports button - icon only on mobile */}
                         {isConnected && (
                             <button
                                 onClick={() => setShowFASBDashboard(true)}
                                 style={{
                                     background: theme === 'dark' ? '#1a1a2e' : '#F3F4F6',
                                     border: 'none',
-                                    borderRadius: '20px',
-                                    padding: '8px 16px',
+                                    borderRadius: '50%',
+                                    width: '36px',
+                                    height: '36px',
                                     display: 'flex',
                                     alignItems: 'center',
-                                    gap: '6px',
+                                    justifyContent: 'center',
                                     cursor: 'pointer',
-                                    fontSize: '14px',
-                                    color: c.text,
+                                    fontSize: '16px',
                                 }}
                                 title="FASB Fair Value Reports"
                             >
-                                📊 Reports
+                                📊
                             </button>
                         )}
                         {/* Dark mode toggle */}
@@ -713,18 +713,38 @@ export default function Home() {
                                 background: theme === 'dark' ? '#1a1a2e' : '#F3F4F6',
                                 border: 'none',
                                 borderRadius: '50%',
-                                width: '40px',
-                                height: '40px',
+                                width: '36px',
+                                height: '36px',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 cursor: 'pointer',
-                                fontSize: '18px'
+                                fontSize: '16px'
                             }}
                             title={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
                         >
                             {theme === 'light' ? '🌙' : '☀️'}
                         </button>
+                        {/* Treasury Mode button - icon only on mobile */}
+                        <button
+                            onClick={() => setShowTreasuryMode(true)}
+                            style={{
+                                background: theme === 'dark' ? '#1a1a2e' : '#F3F4F6',
+                                border: 'none',
+                                borderRadius: '50%',
+                                width: '36px',
+                                height: '36px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                cursor: 'pointer',
+                                fontSize: '16px',
+                            }}
+                            title="Treasury Mode for Organizations"
+                        >
+                            🏛️
+                        </button>
+                        {/* Connect Wallet */}
                         <ConnectButton />
                     </div>
                 </header>
@@ -1112,19 +1132,6 @@ export default function Home() {
                             <a href="https://github.com/Jubilee-Protocol/jBTCi-on-Base#readme" target="_blank" rel="noopener noreferrer" style={{ color: c.textLight }}>
                                 Learn More ↗
                             </a>
-                            <button
-                                onClick={() => setShowTreasuryMode(true)}
-                                style={{
-                                    background: 'transparent',
-                                    border: 'none',
-                                    color: c.textLight,
-                                    cursor: 'pointer',
-                                    fontSize: '14px',
-                                    padding: 0,
-                                }}
-                            >
-                                🏛️ Treasury
-                            </button>
                             <button
                                 onClick={reopenTutorial}
                                 style={{
