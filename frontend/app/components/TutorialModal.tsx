@@ -56,14 +56,14 @@ export function TutorialModal({ isOpen, onClose, theme, btcPrice }: TutorialModa
         text: '#ffffff',
         textMuted: '#a0a0b0',
         border: '#2a2a3e',
-        accent: '#FF6B35',
+        accent: '#E040FB',
     } : {
         bg: 'rgba(255, 255, 255, 0.98)',
         card: '#ffffff',
         text: '#1a1a2e',
         textMuted: '#666680',
         border: '#e5e7eb',
-        accent: '#FF6B35',
+        accent: '#E040FB',
     };
 
     if (!isOpen) return null;
@@ -111,7 +111,7 @@ export function TutorialModal({ isOpen, onClose, theme, btcPrice }: TutorialModa
             }}>
                 {/* Header */}
                 <div style={{
-                    background: `linear-gradient(135deg, ${c.accent} 0%, #FF8C5A 100%)`,
+                    background: `linear-gradient(135deg, #E040FB 0%, #7C4DFF 100%)`,
                     padding: '24px',
                     textAlign: 'center',
                 }}>
@@ -121,7 +121,7 @@ export function TutorialModal({ isOpen, onClose, theme, btcPrice }: TutorialModa
                         fontWeight: '700',
                         margin: 0,
                     }}>
-                        {step === 1 && '🧡 Welcome to jBTCi'}
+                        {step === 1 && '💜 Welcome to jBTCi'}
                         {step === 2 && '⚙️ How It Works'}
                         {step === 3 && '💰 Getting Started'}
                         {step === 4 && '🚀 Ready to Deposit'}
@@ -177,7 +177,7 @@ export function TutorialModal({ isOpen, onClose, theme, btcPrice }: TutorialModa
                                         jBTCi Strategy
                                     </div>
                                     <Arrow />
-                                    <Token name="jBTCi" color="#FF6B35" />
+                                    <Token name="jBTCi" color="#E040FB" />
                                 </div>
                                 <div style={{
                                     marginTop: '16px',
@@ -319,7 +319,7 @@ export function TutorialModal({ isOpen, onClose, theme, btcPrice }: TutorialModa
                     <button
                         onClick={handleNext}
                         style={{
-                            background: `linear-gradient(135deg, ${c.accent} 0%, #FF8C5A 100%)`,
+                            background: `linear-gradient(135deg, #E040FB 0%, #7C4DFF 100%)`,
                             border: 'none',
                             borderRadius: '12px',
                             padding: '12px 32px',
@@ -422,7 +422,7 @@ function Step({ num, text, theme }: { num: number; text: string; theme: 'light' 
                 width: '28px',
                 height: '28px',
                 borderRadius: '50%',
-                background: '#FF6B35',
+                background: '#E040FB',
                 color: 'white',
                 display: 'flex',
                 alignItems: 'center',

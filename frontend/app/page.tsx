@@ -1083,10 +1083,8 @@ export default function Home() {
                                 📚 Tutorial
                             </button>
                             <a
-                                href="https://discord.gg/yBhdxtMB"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                title="Need help? Join our Discord"
+                                href="mailto:contact@jubileeprotocol.xyz"
+                                title="Contact us for support"
                                 style={{
                                     display: 'inline-flex',
                                     alignItems: 'center',
@@ -1094,7 +1092,7 @@ export default function Home() {
                                     width: '24px',
                                     height: '24px',
                                     borderRadius: '50%',
-                                    background: 'linear-gradient(135deg, #5865F2 0%, #4752C4 100%)',
+                                    background: 'linear-gradient(135deg, #E040FB 0%, #7C4DFF 100%)',
                                     color: 'white',
                                     fontSize: '14px',
                                     fontWeight: '700',
@@ -1102,7 +1100,7 @@ export default function Home() {
                                     marginLeft: '4px'
                                 }}
                             >
-                                ?
+                                ✉
                             </a>
                         </div>
                     </div>
