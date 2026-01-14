@@ -22,8 +22,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <PrivyProvider
             appId={PRIVY_APP_ID}
             config={{
-                // Login methods: Email, Google, LinkedIn, plus wallet
-                loginMethods: ['email', 'google', 'linkedin', 'wallet'],
+                // Login methods: Email, Google, plus wallet
+                loginMethods: ['email', 'google', 'wallet'],
 
                 // Appearance
                 appearance: {
