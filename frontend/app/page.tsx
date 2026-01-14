@@ -8,6 +8,7 @@ import { formatUnits, parseUnits } from 'viem';
 import { CONTRACTS } from '../config';
 import { useIsMiniApp, useMiniAppReady } from './hooks/useMiniApp';
 import { TutorialModal, useTutorial } from './components/TutorialModal';
+import { FASBDashboard } from './components/FASBDashboard';
 
 // Min deposit constant
 const MIN_DEPOSIT_BTC = 0.01;
@@ -231,6 +232,7 @@ export default function Home() {
     const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'pending' } | null>(null);
     const [theme, setTheme] = useState<Theme>('light');
     const [showHistory, setShowHistory] = useState(false);
+    const [showFASBDashboard, setShowFASBDashboard] = useState(false);
     const [txHistory, setTxHistory] = useState<TxHistoryItem[]>([]);
 
     // Mini app detection and frame readiness
@@ -653,6 +655,14 @@ export default function Home() {
             {/* Toast notifications */}
             {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
 
+            {/* FASB Dashboard Modal */}
+            <FASBDashboard
+                isOpen={showFASBDashboard}
+                onClose={() => setShowFASBDashboard(false)}
+                theme={theme}
+                btcPrice={btcPrice}
+            />
+
             <main style={getGradientStyle(theme)} className="flex flex-col">
                 {/* Header */}
                 <header style={{
@@ -666,6 +676,27 @@ export default function Home() {
                         <span style={{ fontSize: '22px', fontWeight: 'bold', color: c.text }}>jBTCi</span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                        {/* Reports button */}
+                        {isConnected && (
+                            <button
+                                onClick={() => setShowFASBDashboard(true)}
+                                style={{
+                                    background: theme === 'dark' ? '#1a1a2e' : '#F3F4F6',
+                                    border: 'none',
+                                    borderRadius: '20px',
+                                    padding: '8px 16px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '6px',
+                                    cursor: 'pointer',
+                                    fontSize: '14px',
+                                    color: c.text,
+                                }}
+                                title="FASB Fair Value Reports"
+                            >
+                                📊 Reports
+                            </button>
+                        )}
                         {/* Dark mode toggle */}
                         <button
                             onClick={toggleTheme}
