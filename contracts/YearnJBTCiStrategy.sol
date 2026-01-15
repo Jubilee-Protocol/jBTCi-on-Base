@@ -1467,11 +1467,13 @@ contract YearnJBTCiStrategy is BaseStrategy, ReentrancyGuard {
         cbbtcAlloc = (cbbtcBalance * BASIS_POINTS) / totalBalance;
     }
 
+    /**
+     * @notice Calculate total holdings (WBTC + cbBTC only)
+     * @dev IMPORTANT: Do NOT add asset.balanceOf() here - asset IS cbBTC, so it would double-count!
+     *      The strategy's underlying asset is cbBTC, which is already counted via CBBTC.balanceOf()
+     */
     function _calculateTotalHoldings() internal view returns (uint256) {
-        return
-            WBTC.balanceOf(address(this)) +
-            CBBTC.balanceOf(address(this)) +
-            asset.balanceOf(address(this));
+        return WBTC.balanceOf(address(this)) + CBBTC.balanceOf(address(this));
     }
 
     function _abs(int256 x) internal pure returns (uint256) {
@@ -1645,6 +1647,7 @@ contract YearnJBTCiStrategy is BaseStrategy, ReentrancyGuard {
 
     /**
      * @notice Get detailed allocation status
+     * @dev Note: assetBalance is intentionally set to 0 as asset==cbBTC (would double-count otherwise)
      */
     function getAllocationDetails()
         external
@@ -1661,13 +1664,13 @@ contract YearnJBTCiStrategy is BaseStrategy, ReentrancyGuard {
     {
         wbtcBalance = WBTC.balanceOf(address(this));
         cbbtcBalance = CBBTC.balanceOf(address(this));
-        assetBalance = asset.balanceOf(address(this));
-        totalBalance = wbtcBalance + cbbtcBalance + assetBalance;
+        assetBalance = 0; // Set to 0 - asset IS cbBTC, already counted above
+        totalBalance = wbtcBalance + cbbtcBalance;
 
         if (totalBalance > 0) {
             wbtcPercent = (wbtcBalance * BASIS_POINTS) / totalBalance;
             cbbtcPercent = (cbbtcBalance * BASIS_POINTS) / totalBalance;
-            assetPercent = (assetBalance * BASIS_POINTS) / totalBalance;
+            assetPercent = 0; // asset is cbBTC, already counted
         }
     }
 
