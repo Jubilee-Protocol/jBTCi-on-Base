@@ -94,7 +94,7 @@ export function FASBDashboard({ isOpen, onClose, theme, btcPrice }: FASBDashboar
             try {
                 // Fetch from BaseScan API
                 const res = await fetch(
-                    `https://api.basescan.org/api?module=account&action=tokentx&address=${address}&contractaddress=${CONTRACTS.STRATEGY}&sort=desc&apikey=YourApiKey`
+                    `https://api.basescan.org/api?module=account&action=tokentx&address=${address}&contractaddress=${CONTRACTS.STRATEGY}&sort=desc&apikey=B91X8H9HJQZIU8FMGRGPQEDZHHNRJVEPFT`
                 );
                 const data = await res.json();
 
