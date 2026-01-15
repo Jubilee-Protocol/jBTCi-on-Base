@@ -32,6 +32,28 @@ body {
   color: var(--text-dark);
   font-family: 'Work Sans', system-ui, -apple-system, sans-serif;
   -webkit-overflow-scrolling: touch;
+  /* Prevent RainbowKit modal from shifting page content */
+  overflow-y: scroll !important;
+}
+
+/* Fix RainbowKit modal positioning - prevent page shift */
+html {
+  overflow-y: scroll;
+}
+
+/* Prevent body padding when RainbowKit modal opens */
+body[data-rk-modal-open="true"],
+body[style*="padding-right"] {
+  padding-right: 0 !important;
+}
+
+/* Ensure RainbowKit modal is centered properly */
+[data-rk] [role="dialog"] {
+  position: fixed !important;
+  inset: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 /* Gradient background with Base blue, white, and Jubilee pink */
