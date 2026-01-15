@@ -35,20 +35,24 @@ jBTCi maintains a 50/50 allocation between WBTC and cbBTC, automatically rebalan
 
 ### 🏛️ Treasury Mode (Multi-Signature Accountability)
 - For church treasuries and organizations
-- Safe wallet integration via WalletConnect
+- Safe wallet integration via Safe Apps SDK
 - "Two signatures on a check" messaging
 - Step-by-step Safe creation guide
 
-### 🔐 Privy Integration
-- Email, Google, LinkedIn login for non-crypto users
-- Embedded wallet creation for new users
-- Preserves existing RainbowKit wallet connections
+### Safe Apps Integration
+jBTCi is compatible with [Safe Apps SDK](https://github.com/safe-global/safe-apps-sdk) for multi-signature treasury management. To use jBTCi with Safe:
+
+1. Go to app.safe.global
+2. Open your Safe on Base
+3. Click **Apps** → **My custom apps**
+4. Add: `https://mint.jbtci.xyz`
+5. jBTCi auto-connects when opened from Safe!
 
 ---
 
 ## Security
 
-- **Audit Score**: 94/100 ⭐⭐⭐⭐⭐
+- **Audit Score**: 97/100 ⭐⭐⭐⭐⭐
 - See [docs/AUDIT_REPORT.md](docs/AUDIT_REPORT.md) for details
 
 ---
@@ -65,7 +69,9 @@ jBTCi maintains a 50/50 allocation between WBTC and cbBTC, automatically rebalan
 ### Base Sepolia (Testnet)
 | Contract | Address |
 |----------|---------|
-| jBTCi Strategy | `0x08F793B353e9C0EF52c9c00aa579c69F6D9DAA1A` |
+| jBTCi Strategy | `0xd0d92320555F3883fB20D84A6b372A511DD538C4` |
+| cbBTC | `0xfE7984100E4DAc864b1B0FfeebC25bADA0D2C782` |
+| WBTC | `0xbf7690ec2cD04F1B108f2a6e10D80039dcb589bb` |
 
 ---
 
@@ -87,11 +93,13 @@ jBTCi-on-Base/
 │   ├── app/
 │   │   ├── components/
 │   │   │   ├── FASBDashboard.tsx    # Fair value reporting
-│   │   │   ├── TreasuryMode.tsx     # Safe integration
-│   │   │   └── TutorialModal.tsx    # Onboarding
-│   │   ├── providers.tsx        # Privy + RainbowKit
+│   │   │   └── TreasuryMode.tsx     # Safe integration
+│   │   ├── hooks/
+│   │   │   └── useSafeApps.ts       # Safe Apps SDK hook
+│   │   ├── providers.tsx        # RainbowKit config
 │   │   └── page.tsx             # Main app
-│   └── .env.local               # NEXT_PUBLIC_PRIVY_APP_ID
+│   └── public/
+│       └── manifest.json        # Safe Apps manifest
 └── README.md
 ```
 
@@ -109,32 +117,15 @@ npx hardhat compile
 # Run frontend locally
 cd frontend && npm run dev
 
-# Build for production (requires Node 20+)
-source ~/.nvm/nvm.sh && nvm use 20 && npm run build
+# Build for production
+cd frontend && npm run build
 ```
 
 ---
 
-## Environment Variables
+## Maintenance Mode
 
-### Frontend (.env.local)
-```
-NEXT_PUBLIC_PRIVY_APP_ID=your-privy-app-id
-```
-
-### Netlify
-Add `NEXT_PUBLIC_PRIVY_APP_ID` in Site Settings → Environment Variables
-
----
-
-## Connecting with Safe Wallet
-
-1. Open mint.jbtci.xyz in a browser
-2. Click "Connect Wallet"
-3. Select "WalletConnect"
-4. Copy the pairing code (`wc:...`)
-5. Go to Safe → Apps → WalletConnect
-6. Paste the pairing code
+During maintenance, mainnet deposits/withdrawals are disabled but **testnet (Base Sepolia) remains available** for testing. Switch to Base Sepolia in your wallet to test functionality.
 
 ---
 

@@ -14,10 +14,10 @@ import { TreasuryMode } from './components/TreasuryMode';
 // Min deposit constant
 const MIN_DEPOSIT_BTC = 0.01;
 
-// MAINTENANCE MODE - Set to true to disable deposits/withdraws
-// Remove this once the new strategy is deployed
-const MAINTENANCE_MODE = true;
-const MAINTENANCE_MESSAGE = "jBTCi is undergoing scheduled maintenance. Deposits and withdrawals are temporarily disabled. Your funds are safe.";
+// MAINTENANCE MODE - Applies to MAINNET only
+// Testnet (Base Sepolia) works during maintenance for testing
+const MAINNET_MAINTENANCE = true;
+const MAINTENANCE_MESSAGE = "jBTCi is undergoing scheduled maintenance. Deposits and withdrawals are temporarily disabled on mainnet. Testnet is available for testing.";
 
 // Strategy ABI - deposit, redeem, convertToAssets, and status
 const STRATEGY_ABI = [
@@ -240,6 +240,10 @@ export default function Home() {
     // Mini app detection and frame readiness
     const isMiniApp = useIsMiniApp();
     useMiniAppReady();
+
+    // Maintenance mode only applies to mainnet (Base, chainId 8453)
+    // Testnet (Base Sepolia, chainId 84532) works during maintenance
+    const isMaintenanceMode = MAINNET_MAINTENANCE && chainId === 8453;
 
     // Tutorial for first-time visitors
     const { showTutorial, completeTutorial, reopenTutorial } = useTutorial();
@@ -761,7 +765,7 @@ export default function Home() {
                             border: `1px solid ${c.cardBorder}`
                         }}>
                             {/* Maintenance Mode Banner */}
-                            {MAINTENANCE_MODE && (
+                            {isMaintenanceMode && (
                                 <div style={{
                                     background: 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%)',
                                     border: '1px solid #F59E0B',
@@ -1034,7 +1038,7 @@ export default function Home() {
                                 ) : (
                                     <button
                                         onClick={activeTab === 'deposit' ? handleDeposit : handleWithdraw}
-                                        disabled={isLoading || !depositAmount || parseFloat(depositAmount) <= 0 || MAINTENANCE_MODE}
+                                        disabled={isLoading || !depositAmount || parseFloat(depositAmount) <= 0 || isMaintenanceMode}
                                         style={{
                                             width: '100%',
                                             padding: '18px',
@@ -1117,8 +1121,8 @@ export default function Home() {
 
                         {/* Status & Links */}
                         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px', marginTop: '20px', fontSize: '14px', flexWrap: 'wrap' }}>
-                            <span style={{ color: MAINTENANCE_MODE ? '#F59E0B' : (strategyStatus?.isPaused ? '#EF4444' : '#22C55E') }}>
-                                ● {MAINTENANCE_MODE ? 'Maintenance' : (strategyStatus?.isPaused ? 'Paused' : 'Active')}
+                            <span style={{ color: isMaintenanceMode ? '#F59E0B' : (strategyStatus?.isPaused ? '#EF4444' : '#22C55E') }}>
+                                ● {isMaintenanceMode ? 'Maintenance' : (strategyStatus?.isPaused ? 'Paused' : 'Active')}
                             </span>
                             <a href="https://basescan.org/address/0x7d0Ae1Fa145F3d5B511262287fF686C25000816D" target="_blank" rel="noopener noreferrer" style={{ color: c.textLight }}>
                                 Contract ↗
