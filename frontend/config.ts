@@ -45,10 +45,10 @@ export const CONTRACTS = {
         cbBTC: '0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf',
         wBTC: '0x0555E30da8f98308EdB960aa94C0Db47230d2B9c',
     },
-    // Base Sepolia (testnet)
+    // Base Sepolia (testnet) - FIXED addresses Jan 14 2026
     testnet: {
-        strategy: '0xd0d92320555F3883fB20D84A6b372A511DD538C4',
-        cbBTC: '0xfE7984100E4DAc864b1B0FfeebC25bADA0D2C782',
+        strategy: '0x08F793B353e9C0EF52c9c00aa579c69F6D9DAA1A', // jBTCi Strategy (Testnet) - WORKING
+        cbBTC: '0x5552ce4C7c6821A43fD53aB2E4fBd28d2B8c5A5d',    // Mock cbBTC for testnet
         wBTC: '0xbf7690ec2cD04F1B108f2a6e10D80039dcb589bb',
     }
 }
