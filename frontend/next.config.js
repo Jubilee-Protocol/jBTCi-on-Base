@@ -22,8 +22,43 @@ const nextConfig = {
     eslint: {
         ignoreDuringBuilds: true,
     },
+    // CORS headers for Safe Apps SDK compatibility
+    async headers() {
+        return [
+            {
+                // Apply to all routes
+                source: '/:path*',
+                headers: [
+                    {
+                        key: 'Access-Control-Allow-Origin',
+                        value: '*',
+                    },
+                    {
+                        key: 'Access-Control-Allow-Methods',
+                        value: 'GET, POST, PUT, DELETE, OPTIONS',
+                    },
+                    {
+                        key: 'Access-Control-Allow-Headers',
+                        value: 'X-Requested-With, content-type, Authorization',
+                    },
+                ],
+            },
+            {
+                // Specifically for manifest.json
+                source: '/manifest.json',
+                headers: [
+                    {
+                        key: 'Access-Control-Allow-Origin',
+                        value: '*',
+                    },
+                    {
+                        key: 'Content-Type',
+                        value: 'application/json',
+                    },
+                ],
+            },
+        ];
+    },
 };
 
 module.exports = nextConfig;
-
-

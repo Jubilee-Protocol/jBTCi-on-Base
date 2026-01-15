@@ -1,20 +1,22 @@
 import { http, createConfig } from 'wagmi'
 import { base, baseSepolia } from 'wagmi/chains'
-import { connectorsForWallets, getDefaultConfig } from '@rainbow-me/rainbowkit'
+import { connectorsForWallets } from '@rainbow-me/rainbowkit'
+import { safe } from 'wagmi/connectors'
 import {
     rainbowWallet,
     walletConnectWallet,
     coinbaseWallet,
-    metaMaskWallet
+    metaMaskWallet,
+    safeWallet
 } from '@rainbow-me/rainbowkit/wallets'
 import { farcasterMiniApp } from '@farcaster/miniapp-wagmi-connector'
 
-// Create connectors with Farcaster mini app support
+// Create connectors with Farcaster mini app support + Safe wallet
 const connectors = connectorsForWallets(
     [
         {
             groupName: 'Recommended',
-            wallets: [coinbaseWallet, metaMaskWallet, rainbowWallet, walletConnectWallet],
+            wallets: [coinbaseWallet, metaMaskWallet, rainbowWallet, walletConnectWallet, safeWallet],
         },
     ],
     {
@@ -23,10 +25,14 @@ const connectors = connectorsForWallets(
     }
 )
 
-// Create config with Farcaster connector + RainbowKit wallets
+// Create config with Safe connector + Farcaster + RainbowKit wallets
 export const config = createConfig({
     chains: [base, baseSepolia],
     connectors: [
+        safe({
+            allowedDomains: [/app\.safe\.global$/],
+            debug: false,
+        }),
         farcasterMiniApp(), // Farcaster mini app connector (auto-connects in Base App)
         ...connectors,
     ],
