@@ -3,6 +3,7 @@ import "dotenv/config";
 import "@matterlabs/hardhat-zksync-solc";
 import "@matterlabs/hardhat-zksync-deploy";
 import "@nomicfoundation/hardhat-verify";
+import "@nomicfoundation/hardhat-ethers";
 import "hardhat-preprocessor";
 import * as fs from "fs";
 
