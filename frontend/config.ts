@@ -51,10 +51,10 @@ export const CONTRACTS = {
         cbBTC: '0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf',
         wBTC: '0x0555E30da8f98308EdB960aa94C0Db47230d2B9c',
     },
-    // Base Sepolia (testnet) - FIXED addresses Jan 14 2026
+    // Base Sepolia (testnet) - NEW DEPLOYMENT Jan 15 2026 (bug fix)
     testnet: {
-        strategy: '0x08F793B353e9C0EF52c9c00aa579c69F6D9DAA1A', // jBTCi Strategy (Testnet) - WORKING
-        cbBTC: '0x5552ce4C7c6821A43fD53aB2E4fBd28d2B8c5A5d',    // Mock cbBTC for testnet
-        wBTC: '0xbf7690ec2cD04F1B108f2a6e10D80039dcb589bb',
+        strategy: '0x43814Da4b3CB4344395A85afF2325282A43cbda6', // jBTCi Strategy (Testnet) - BUG FIXED
+        cbBTC: '0x0D1feA7B0f63A9DA5b0dA89faFfBb56192d7cd93',    // Mock cbBTC for testnet
+        wBTC: '0x5ed96C75f5F04A94308623A8828B819E7Ef60B1c',     // Mock WBTC for testnet
     }
 }

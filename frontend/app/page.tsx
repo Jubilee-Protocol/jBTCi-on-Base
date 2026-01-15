@@ -418,28 +418,10 @@ export default function Home() {
 
     const shareRatioDisplay = shareRatio ? (Number(formatUnits(shareRatio, 8))).toFixed(6) : '1.000000';
 
-    // Note: Contract has a bug where it double-counts cbBTC (asset == cbBTC).
-    // We recalculate allocations based on wbtcBalance + cbbtcBalance only.
-    // If contract returns values > 100% total, we normalize them.
-    const rawWbtcAlloc = strategyStatus ? Number(strategyStatus.wbtcAlloc) : 5000;
-    const rawCbbtcAlloc = strategyStatus ? Number(strategyStatus.cbbtcAlloc) : 5000;
-    const totalAlloc = rawWbtcAlloc + rawCbbtcAlloc;
-
-    // If allocations don't add up, normalize them OR use 50/50 default
-    let wbtcPercent = 50;
-    let cbbtcPercent = 50;
-    if (totalAlloc > 0 && totalAlloc !== 10000) {
-        // Normalize to 100%
-        wbtcPercent = (rawWbtcAlloc / totalAlloc) * 100;
-        cbbtcPercent = (rawCbbtcAlloc / totalAlloc) * 100;
-    } else if (totalAlloc === 10000) {
-        wbtcPercent = rawWbtcAlloc / 100;
-        cbbtcPercent = rawCbbtcAlloc / 100;
-    }
-
-    // For TVL, divide totalHoldings by 2 since contract double-counts cbBTC (asset == cbBTC)
-    const rawTotalHoldings = strategyStatus ? Number(formatUnits(strategyStatus.totalHoldings, 8)) : 0;
-    const totalHoldings = rawTotalHoldings > 0 ? rawTotalHoldings / 2 : 0;
+    // Allocation percentages from strategy (bug fixed in new testnet deployment Jan 15 2026)
+    const wbtcPercent = strategyStatus ? Number(strategyStatus.wbtcAlloc) / 100 : 50;
+    const cbbtcPercent = strategyStatus ? Number(strategyStatus.cbbtcAlloc) / 100 : 50;
+    const totalHoldings = strategyStatus ? Number(formatUnits(strategyStatus.totalHoldings, 8)) : 0;
     const depositUsdValue = (parseFloat(depositAmount || '0') * btcPrice);
 
     // Handle deposit
