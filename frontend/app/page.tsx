@@ -269,15 +269,15 @@ export default function Home() {
     // Get theme colors
     const c = colors[theme];
 
-    // Contract write hooks
-    const { writeContract: approveToken, data: approveHash, isPending: isApproving } = useWriteContract();
-    const { writeContract: depositAssets, data: depositHash, isPending: isDepositing } = useWriteContract();
-    const { writeContract: redeemShares, data: redeemHash, isPending: isRedeeming } = useWriteContract();
+    // Contract write hooks - include error and reset for proper state management
+    const { writeContract: approveToken, data: approveHash, isPending: isApproving, error: approveError, reset: resetApprove } = useWriteContract();
+    const { writeContract: depositAssets, data: depositHash, isPending: isDepositing, error: depositError, reset: resetDeposit } = useWriteContract();
+    const { writeContract: redeemShares, data: redeemHash, isPending: isRedeeming, error: redeemError, reset: resetRedeem } = useWriteContract();
 
-    // Wait for transaction receipts
-    const { isLoading: isApproveConfirming, isSuccess: isApproveSuccess } = useWaitForTransactionReceipt({ hash: approveHash });
-    const { isLoading: isDepositConfirming, isSuccess: isDepositSuccess } = useWaitForTransactionReceipt({ hash: depositHash });
-    const { isLoading: isRedeemConfirming, isSuccess: isRedeemSuccess } = useWaitForTransactionReceipt({ hash: redeemHash });
+    // Wait for transaction receipts - include error state
+    const { isLoading: isApproveConfirming, isSuccess: isApproveSuccess, isError: isApproveFailed } = useWaitForTransactionReceipt({ hash: approveHash });
+    const { isLoading: isDepositConfirming, isSuccess: isDepositSuccess, isError: isDepositFailed } = useWaitForTransactionReceipt({ hash: depositHash });
+    const { isLoading: isRedeemConfirming, isSuccess: isRedeemSuccess, isError: isRedeemFailed } = useWaitForTransactionReceipt({ hash: redeemHash });
 
     // Load theme from localStorage
     useEffect(() => {
@@ -361,9 +361,63 @@ export default function Home() {
 
     useEffect(() => {
         if (isApproveSuccess && depositAmount) {
-            handleDeposit();
+            // Refetch allowance BEFORE attempting deposit
+            refetchAllowance().then(() => {
+                // Small delay to ensure state is updated
+                setTimeout(() => handleDeposit(), 500);
+            });
         }
     }, [isApproveSuccess]);
+
+    // Handle transaction errors and cancellations
+    useEffect(() => {
+        if (approveError) {
+            const msg = approveError.message.includes('User rejected')
+                ? 'Approval cancelled by user'
+                : 'Approval failed: ' + approveError.message.slice(0, 50);
+            setToast({ message: msg, type: 'error' });
+            resetApprove();
+        }
+    }, [approveError]);
+
+    useEffect(() => {
+        if (depositError) {
+            const msg = depositError.message.includes('User rejected')
+                ? 'Deposit cancelled by user'
+                : 'Deposit failed: ' + depositError.message.slice(0, 50);
+            setToast({ message: msg, type: 'error' });
+            resetDeposit();
+        }
+    }, [depositError]);
+
+    useEffect(() => {
+        if (redeemError) {
+            const msg = redeemError.message.includes('User rejected')
+                ? 'Withdrawal cancelled by user'
+                : 'Withdrawal failed: ' + redeemError.message.slice(0, 50);
+            setToast({ message: msg, type: 'error' });
+            resetRedeem();
+        }
+    }, [redeemError]);
+
+    // Handle on-chain transaction failures
+    useEffect(() => {
+        if (isApproveFailed) {
+            setToast({ message: 'Approval transaction failed on-chain', type: 'error' });
+        }
+    }, [isApproveFailed]);
+
+    useEffect(() => {
+        if (isDepositFailed) {
+            setToast({ message: 'Deposit transaction failed on-chain', type: 'error' });
+        }
+    }, [isDepositFailed]);
+
+    useEffect(() => {
+        if (isRedeemFailed) {
+            setToast({ message: 'Withdrawal transaction failed on-chain', type: 'error' });
+        }
+    }, [isRedeemFailed]);
 
     const handleAcceptTerms = () => {
         if (rememberDevice) {
@@ -432,12 +486,14 @@ export default function Home() {
             const amountWei = parseUnits(depositAmount, 8);
 
             if (!allowance || allowance < amountWei) {
-                setToast({ message: 'Approving cbBTC...', type: 'pending' });
+                setToast({ message: 'Approving cbBTC (one-time)...', type: 'pending' });
+                // Use max uint256 for infinite approval (one-time)
+                const MAX_UINT256 = BigInt('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
                 approveToken({
                     address: cbBTCAddress,
                     abi: ERC20_ABI,
                     functionName: 'approve',
-                    args: [strategyAddress, amountWei],
+                    args: [strategyAddress, MAX_UINT256],
                 } as any);
                 return;
             }
