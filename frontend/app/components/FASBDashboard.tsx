@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { useAccount, useReadContract } from 'wagmi';
+import { useAccount, useReadContract, useChainId } from 'wagmi';
 import { formatUnits } from 'viem';
 import { CONTRACTS } from '../../config';
+import { base, baseSepolia } from 'wagmi/chains';
 
 interface FASBDashboardProps {
     isOpen: boolean;
@@ -30,11 +31,16 @@ const STRATEGY_ABI = [
 
 export function FASBDashboard({ isOpen, onClose, theme, btcPrice }: FASBDashboardProps) {
     const { address } = useAccount();
+    const chainId = useChainId();
     const [period, setPeriod] = useState<Period>('Q1');
     const [customStart, setCustomStart] = useState('');
     const [customEnd, setCustomEnd] = useState('');
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+
+    // Get network-specific config
+    const isMainnet = chainId === base.id;
+    const strategyAddress = isMainnet ? CONTRACTS.mainnet.strategy : CONTRACTS.testnet.strategy;
 
     const c = theme === 'dark' ? {
         bg: 'rgba(20, 20, 35, 0.98)',
@@ -56,9 +62,9 @@ export function FASBDashboard({ isOpen, onClose, theme, btcPrice }: FASBDashboar
         negative: '#DC2626',
     };
 
-    // Read jBTCi balance
+    // Read jBTCi balance using network-aware address
     const { data: jbtciBalance } = useReadContract({
-        address: CONTRACTS.STRATEGY as `0x${string}`,
+        address: strategyAddress as `0x${string}`,
         abi: STRATEGY_ABI,
         functionName: 'balanceOf',
         args: address ? [address] : undefined,
@@ -85,20 +91,24 @@ export function FASBDashboard({ isOpen, onClose, theme, btcPrice }: FASBDashboar
         }
     };
 
-    // Fetch transactions from BaseScan
+    // Fetch transactions from BaseScan (mainnet) or show testnet message
     useEffect(() => {
         if (!address || !isOpen) return;
 
         const fetchTransactions = async () => {
             setIsLoading(true);
             try {
-                // Fetch from BaseScan API
+                // BaseScan API only works for mainnet - testnet doesn't have token indexing
+                const apiBase = isMainnet
+                    ? 'https://api.basescan.org'
+                    : 'https://api-sepolia.basescan.org';
+
                 const res = await fetch(
-                    `https://api.basescan.org/api?module=account&action=tokentx&address=${address}&contractaddress=${CONTRACTS.STRATEGY}&sort=desc&apikey=B91X8H9HJQZIU8FMGRGPQEDZHHNRJVEPFT`
+                    `${apiBase}/api?module=account&action=tokentx&address=${address}&contractaddress=${strategyAddress}&sort=desc&apikey=B91X8H9HJQZIU8FMGRGPQEDZHHNRJVEPFT`
                 );
                 const data = await res.json();
 
-                if (data.status === '1' && data.result) {
+                if (data.status === '1' && data.result && Array.isArray(data.result)) {
                     const txs: Transaction[] = data.result.slice(0, 50).map((tx: any) => ({
                         date: new Date(parseInt(tx.timeStamp) * 1000).toLocaleDateString(),
                         type: tx.to.toLowerCase() === address.toLowerCase() ? 'Deposit' : 'Withdraw',
@@ -108,15 +118,19 @@ export function FASBDashboard({ isOpen, onClose, theme, btcPrice }: FASBDashboar
                         hash: tx.hash,
                     }));
                     setTransactions(txs);
+                } else {
+                    // No transactions found or API error
+                    setTransactions([]);
                 }
             } catch (err) {
-                console.log('Failed to fetch transactions');
+                console.log('Failed to fetch transactions:', err);
+                setTransactions([]);
             }
             setIsLoading(false);
         };
 
         fetchTransactions();
-    }, [address, isOpen, btcPrice]);
+    }, [address, isOpen, btcPrice, strategyAddress, isMainnet]);
 
     // Calculate gains/losses
     const { totalCostBasis, unrealizedGain, percentChange } = useMemo(() => {
