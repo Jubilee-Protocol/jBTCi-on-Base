@@ -248,3 +248,69 @@ input[type="number"]::-webkit-outer-spin-button {
     padding-bottom: env(safe-area-inset-bottom);
   }
 }
+
+/* MetaMask browser / Mobile wallet specific fixes */
+@media screen and (max-width: 480px) {
+  html {
+    font-size: 16px !important;
+    /* Prevent zoom on input focus in iOS */
+  }
+
+  body {
+    min-width: 100vw;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Ensure card fills mobile screen */
+  .card {
+    margin: 8px !important;
+    padding: 16px !important;
+    border-radius: 16px !important;
+    min-width: calc(100vw - 16px) !important;
+  }
+
+  /* Larger touch targets for buttons */
+  .btn-blue {
+    width: 100% !important;
+    padding: 16px 24px !important;
+    font-size: 18px !important;
+    min-height: 56px;
+  }
+
+  /* Prevent iOS zoom on input focus */
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+
+  /* Full-width inputs */
+  input[type="text"],
+  input[type="number"] {
+    width: 100% !important;
+    padding: 12px !important;
+    font-size: 18px !important;
+  }
+
+  /* Better spacing */
+  h1 {
+    font-size: 24px !important;
+  }
+
+  h2 {
+    font-size: 20px !important;
+  }
+
+  h3 {
+    font-size: 18px !important;
+  }
+
+  /* Fix container width */
+  main,
+  [class*="container"] {
+    width: 100% !important;
+    max-width: 100vw !important;
+    padding: 8px !important;
+  }
+}

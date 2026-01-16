@@ -1,5 +1,6 @@
 {
     "name": "jBTCi",
+    "short_name": "jBTCi",
     "description": "The Bitcoin Index Fund - deposit cbBTC for diversified BTC exposure with 6-10% APY",
     "iconPath": "./jubilee-logo-pink.png",
     "icons": [
@@ -8,5 +9,13 @@
             "type": "image/png",
             "sizes": "512x512"
         }
-    ]
+    ],
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0a0a1a",
+    "theme_color": "#0052FF",
+    "providedBy": {
+        "name": "Jubilee Labs",
+        "url": "https://jubileelabs.xyz"
+    }
 }

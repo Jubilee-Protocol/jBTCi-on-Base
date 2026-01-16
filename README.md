@@ -129,6 +129,31 @@ During maintenance, mainnet deposits/withdrawals are disabled but **testnet (Bas
 
 ---
 
+## Changelog (Jan 7-16, 2026)
+
+### Contract Fixes
+- ✅ Fixed critical double-counting bug in `_calculateTotalHoldings()`
+- ✅ Fixed same bug in `getAllocationDetails()`
+- ✅ Testnet redeployment: `0x43814Da4b3CB4344395A85afF2325282A43cbda6`
+
+### Test Suite (100% Pass Rate)
+- ✅ `scripts/stress_test.js` - 11/11 applicable tests
+- ✅ `scripts/integration_test.js` - 8/8 tests
+- ✅ `scripts/fuzz_test.js` - 165/165 random input tests
+
+### Frontend Improvements
+- ✅ One-time infinite approval (no repeated approval popups)
+- ✅ Error handling for cancelled/failed transactions in toast
+- ✅ FASB Dashboard now network-aware (mainnet/testnet)
+- ✅ Mobile viewport fixes for MetaMask browser
+- ✅ Safe Apps SDK manifest updates for multi-sig support
+
+### Security
+- ✅ Comprehensive audit: 92/100 score
+- ✅ Audit report: `contracts/AUDIT_REPORT.md`
+
+---
+
 ## Built By
 
 **[Jubilee Labs](https://jubileelabs.xyz)** • Powered by **[Yearn V3](https://yearn.fi)** • Deployed on **[Base](https://base.org)**

@@ -1,0 +1,13 @@
+# Netlify Headers Configuration
+# Required for Safe Apps SDK compatibility
+
+/*
+  Access-Control-Allow-Origin: *
+  Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+  Access-Control-Allow-Headers: X-Requested-With, Content-Type, Authorization
+  X-Frame-Options: ALLOWALL
+
+/manifest.json
+  Access-Control-Allow-Origin: *
+  Content-Type: application/json
+  Cache-Control: no-cache
