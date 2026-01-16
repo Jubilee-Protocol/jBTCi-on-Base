@@ -39,14 +39,27 @@ jBTCi maintains a 50/50 allocation between WBTC and cbBTC, automatically rebalan
 - "Two signatures on a check" messaging
 - Step-by-step Safe creation guide
 
-### Safe Apps Integration
-jBTCi is compatible with [Safe Apps SDK](https://github.com/safe-global/safe-apps-sdk) for multi-signature treasury management. To use jBTCi with Safe:
+### Safe Apps Integration ✅
+jBTCi is fully compatible with [Safe (formerly Gnosis Safe)](https://app.safe.global) for multi-signature treasury management.
 
-1. Go to app.safe.global
+**Features:**
+- ✅ Auto-connects when opened inside Safe
+- ✅ Multi-sig transaction flow
+- ✅ No separate wallet connection needed
+- ✅ Works with Base mainnet and testnet
+
+**Setup:**
+1. Go to [app.safe.global](https://app.safe.global)
 2. Open your Safe on Base
-3. Click **Apps** → **My custom apps**
-4. Add: `https://mint.jbtci.xyz`
-5. jBTCi auto-connects when opened from Safe!
+3. Click **Apps** → **My custom apps** → **Add**
+4. Enter: `https://mint.jbtci.xyz`
+5. Click **Add** (accept the disclaimer)
+6. Open jBTCi from Safe - it auto-connects!
+
+**Multi-Sig Workflow:**
+1. One signer initiates deposit/withdrawal
+2. Other signers approve in Safe
+3. Transaction executes after threshold reached
 
 ---
 
@@ -69,9 +82,9 @@ jBTCi is compatible with [Safe Apps SDK](https://github.com/safe-global/safe-app
 ### Base Sepolia (Testnet)
 | Contract | Address |
 |----------|---------|
-| jBTCi Strategy | `0xd0d92320555F3883fB20D84A6b372A511DD538C4` |
-| cbBTC | `0xfE7984100E4DAc864b1B0FfeebC25bADA0D2C782` |
-| WBTC | `0xbf7690ec2cD04F1B108f2a6e10D80039dcb589bb` |
+| jBTCi Strategy | `0x43814Da4b3CB4344395A85afF2325282A43cbda6` |
+| cbBTC (Mock) | `0x0D1feA7B0f63A9DA5b0dA89faFfBb56192d7cd93` |
+| WBTC (Mock) | `0x5ed96C75f5F04A94308623A8828B819E7Ef60B1c` |
 
 ---
 
