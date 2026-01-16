@@ -248,13 +248,35 @@ export default function Home() {
     // Tutorial for first-time visitors
     const { showTutorial, completeTutorial, reopenTutorial } = useTutorial();
 
-    // Auto-connect in mini app context (try Coinbase/injected wallet)
+    // Auto-connect for Safe Apps - when opened inside Safe iframe
+    useEffect(() => {
+        if (!isConnected && connectors.length > 0) {
+            // Check if we're in Safe iframe by looking for Safe connector
+            const safeConnector = connectors.find(c => c.id === 'safe' || c.name.toLowerCase().includes('safe'));
+
+            if (safeConnector) {
+                // Try to connect with Safe connector first (will fail if not in Safe iframe)
+                const timer = setTimeout(async () => {
+                    try {
+                        await connect({ connector: safeConnector });
+                        console.log('[Safe] Auto-connected via Safe connector');
+                    } catch (e) {
+                        // Not in Safe iframe, normal flow
+                        console.log('[Safe] Not in Safe iframe, skipping auto-connect');
+                    }
+                }, 300);
+                return () => clearTimeout(timer);
+            }
+        }
+    }, [isConnected, connectors, connect]);
+
+    // Auto-connect in Farcaster mini app context (try Coinbase/injected wallet)
     useEffect(() => {
         if (isMiniApp && !isConnected && connectors.length > 0) {
             // Try to find and auto-connect with injected or Coinbase wallet
             const coinbaseConnector = connectors.find(c => c.name.toLowerCase().includes('coinbase'));
             const injectedConnector = connectors.find(c => c.name.toLowerCase().includes('injected'));
-            const targetConnector = coinbaseConnector || injectedConnector || connectors[0];
+            const targetConnector = coinbaseConnector || injectedConnector;
 
             if (targetConnector) {
                 // Delay to allow frame to initialize
