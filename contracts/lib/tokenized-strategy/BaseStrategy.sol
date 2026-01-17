@@ -97,10 +97,10 @@ abstract contract BaseStrategy {
      * This address should be the same for every strategy, never be adjusted
      * and always be checked before any integration with the Strategy.
      */
-    // TESTNET: Custom TokenizedStrategy deployment
-    // MAINNET: 0xBB51273D6c746910C7C06fe718f30c936170feD0 (Yearn official)
+    // MAINNET: Yearn official TokenizedStrategy on Base
+    // Verified at: https://basescan.org/address/0xBB51273D6c746910C7C06fe718f30c936170feD0
     address public constant tokenizedStrategyAddress =
-        0x4FEFcCf08c65AD172C57b62d046edd838e1f1d69;
+        0xBB51273D6c746910C7C06fe718f30c936170feD0;
 
     /*//////////////////////////////////////////////////////////////
                             IMMUTABLES

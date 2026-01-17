@@ -2,7 +2,7 @@ const { ethers } = require("ethers");
 require("dotenv").config();
 
 // Mainnet strategy address from config.ts
-const STRATEGY_ADDRESS = "0x7d0Ae1Fa145F3d5B511262287fF686C25000816D";
+const STRATEGY_ADDRESS = "0x27143095013184e718f92330C32A3D2eE9974053";
 
 // TokenizedStrategy ABI (minimal for checking)
 const ABI = [

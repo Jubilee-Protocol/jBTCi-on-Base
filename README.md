@@ -75,7 +75,7 @@ jBTCi is fully compatible with [Safe (formerly Gnosis Safe)](https://app.safe.gl
 ### Base Mainnet
 | Contract | Address |
 |----------|---------|
-| jBTCi Strategy | `0xB3f462F54Ea57a54744712DE527494e9A6bF2219` |
+| jBTCi Strategy | `0x27143095013184e718f92330C32A3D2eE9974053` |
 | cbBTC | `0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf` |
 | WBTC | `0x0555E30da8f98308EdB960aa94C0Db47230d2B9c` |
 
@@ -142,9 +142,11 @@ During maintenance, mainnet deposits/withdrawals are disabled but **testnet (Bas
 
 ---
 
-## Changelog (Jan 7-16, 2026)
+## Changelog (Jan 7-17, 2026)
 
 ### Contract Fixes
+- ✅ **Jan 17**: Fixed critical `tokenizedStrategyAddress` pointing to testnet instead of mainnet
+- ✅ Mainnet redeployment: `0x27143095013184e718f92330C32A3D2eE9974053`
 - ✅ Fixed critical double-counting bug in `_calculateTotalHoldings()`
 - ✅ Fixed same bug in `getAllocationDetails()`
 - ✅ Testnet redeployment: `0x43814Da4b3CB4344395A85afF2325282A43cbda6`

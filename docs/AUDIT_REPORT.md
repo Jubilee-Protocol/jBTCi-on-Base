@@ -1,11 +1,11 @@
 # jBTCi Strategy Security Audit Report
 
-> **Version**: 2.0.0  
-> **Contract**: *New address pending — will be published after maintenance mode is complete*  
-> **Previous Contract**: `0x7d0Ae1Fa145F3d5B511262287fF686C25000816D` *(deprecated)*  
+> **Version**: 2.1.0  
+> **Contract**: `0x27143095013184e718f92330C32A3D2eE9974053`  
+> **Previous Contract**: `0xB3f462F54Ea57a54744712DE527494e9A6bF2219` *(deprecated)*  
 > **Network**: Base Mainnet  
-> **Audit Date**: January 12, 2026  
-> **Status**: 🔧 **Maintenance Mode** — Upgrade in progress
+> **Audit Date**: January 17, 2026  
+> **Status**: ✅ **LIVE** — Ready for deposits
 
 ---
 
@@ -161,6 +161,7 @@ address public constant tokenizedStrategyAddress =
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 2.1.0 | Jan 17, 2026 | Fixed tokenizedStrategyAddress, mainnet redeployment, maintenance mode complete |
 | 2.0.0 | Jan 12, 2026 | Added critical finding, updated scoring, testnet verification |
 | 1.0.0 | Jan 6, 2026 | Initial audit |
 
