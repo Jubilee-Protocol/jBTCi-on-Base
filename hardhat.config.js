@@ -1,26 +1,26 @@
-import { HardhatUserConfig } from "hardhat/config";
-import "dotenv/config";
-import "@matterlabs/hardhat-zksync-solc";
-import "@matterlabs/hardhat-zksync-deploy";
-import "@nomicfoundation/hardhat-verify";
-import "@nomicfoundation/hardhat-ethers";
-import "hardhat-preprocessor";
-import * as fs from "fs";
+require("dotenv/config");
+require("@matterlabs/hardhat-zksync-solc");
+require("@matterlabs/hardhat-zksync-deploy");
+require("@nomicfoundation/hardhat-verify");
+// Note: @nomicfoundation/hardhat-ethers is ESM-only, ethers used directly in deploy scripts
+require("hardhat-preprocessor");
+const fs = require("fs");
 
 function getRemappings() {
   return fs
     .readFileSync("remappings.txt", "utf8")
     .split("\n")
     .filter(Boolean)
-    .map((line: string) => line.trim().split("="));
+    .map((line) => line.trim().split("="));
 }
-const config: HardhatUserConfig = {
+
+const config = {
   solidity: {
     version: "0.8.24",
     settings: {
       optimizer: {
         enabled: true,
-        runs: 1, // Minimize bytecode size
+        runs: 1,
       },
       evmVersion: "cancun",
       viaIR: true,
@@ -67,7 +67,7 @@ const config: HardhatUserConfig = {
   },
   preprocess: {
     eachLine: () => ({
-      transform: (line: string) => {
+      transform: (line) => {
         if (line.match(/^\s*import /i)) {
           for (const [find, replace] of getRemappings()) {
             if (line.includes(find)) {
@@ -95,4 +95,5 @@ const config: HardhatUserConfig = {
     ],
   },
 };
-export default config;
+
+module.exports = config;

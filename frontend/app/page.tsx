@@ -16,7 +16,7 @@ const MIN_DEPOSIT_BTC = 0.01;
 
 // MAINTENANCE MODE - Applies to MAINNET only
 // Testnet (Base Sepolia) works during maintenance for testing
-const MAINNET_MAINTENANCE = true;
+const MAINNET_MAINTENANCE = false; // 🚀 jBTCi is LIVE on mainnet! Jan 16 2026
 const MAINTENANCE_MESSAGE = "jBTCi is undergoing scheduled maintenance. Deposits and withdrawals are temporarily disabled on mainnet. Testnet is available for testing.";
 
 // Strategy ABI - deposit, redeem, convertToAssets, and status

@@ -65,7 +65,7 @@ jBTCi is fully compatible with [Safe (formerly Gnosis Safe)](https://app.safe.gl
 
 ## Security
 
-- **Audit Score**: 97/100 ⭐⭐⭐⭐⭐
+- **Audit Score**: 92/100 ⭐⭐⭐⭐⭐
 - See [docs/AUDIT_REPORT.md](docs/AUDIT_REPORT.md) for details
 
 ---
@@ -75,7 +75,7 @@ jBTCi is fully compatible with [Safe (formerly Gnosis Safe)](https://app.safe.gl
 ### Base Mainnet
 | Contract | Address |
 |----------|---------|
-| jBTCi Strategy | `TBD` |
+| jBTCi Strategy | `0xB3f462F54Ea57a54744712DE527494e9A6bF2219` |
 | cbBTC | `0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf` |
 | WBTC | `0x0555E30da8f98308EdB960aa94C0Db47230d2B9c` |
 
