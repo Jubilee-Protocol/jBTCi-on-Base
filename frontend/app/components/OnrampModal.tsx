@@ -11,9 +11,8 @@ interface OnrampModalProps {
     btcPrice: number;
 }
 
-// Coinbase Onramp configuration
-// Replace with your actual Coinbase Developer Platform project ID
-const CDP_PROJECT_ID = 'jbtci'; // Your CDP project ID
+// Coinbase Onramp configuration - jBTCi CDP Project
+const CDP_PROJECT_ID = '9e7b3e8f-6ede-4580-b829-77c802b3d802';
 
 // cbBTC contract on Base
 const CBBTC_ADDRESS = '0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf';
