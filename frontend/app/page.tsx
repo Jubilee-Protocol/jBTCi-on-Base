@@ -3,8 +3,10 @@
 import Image from 'next/image';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount, useReadContract, useWriteContract, useChainId, useWaitForTransactionReceipt, useConnect } from 'wagmi';
-import { useState, useEffect, useCallback } from 'react';
+import { useCapabilities } from 'wagmi/experimental';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { formatUnits, parseUnits } from 'viem';
+import { base } from 'wagmi/chains';
 import { CONTRACTS } from '../config';
 import { useIsMiniApp, useMiniAppReady } from './hooks/useMiniApp';
 import { TutorialModal, useTutorial } from './components/TutorialModal';
@@ -249,6 +251,14 @@ export default function Home() {
 
     // Tutorial for first-time visitors
     const { showTutorial, completeTutorial, reopenTutorial } = useTutorial();
+
+    // Check if wallet supports gas sponsorship (Coinbase Smart Wallet)
+    const { data: capabilities } = useCapabilities({ account: address });
+    const isGasFree = useMemo(() => {
+        if (!capabilities || !chainId) return false;
+        const chainCapabilities = capabilities[chainId];
+        return chainCapabilities?.paymasterService?.supported === true && chainId === base.id;
+    }, [capabilities, chainId]);
 
     // Auto-connect for Safe Apps - when opened inside Safe iframe
     useEffect(() => {
@@ -1104,6 +1114,25 @@ export default function Home() {
                                     Price by <a href="https://www.coingecko.com/" target="_blank" rel="noopener noreferrer" style={{ color: c.textLight, textDecoration: 'underline' }}>CoinGecko</a>
                                 </div>
 
+                                {/* Gas-Free Banner for Coinbase Smart Wallet */}
+                                {isGasFree && activeTab === 'deposit' && (
+                                    <div style={{
+                                        background: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                                        color: 'white',
+                                        padding: '8px 12px',
+                                        borderRadius: '8px',
+                                        fontSize: '12px',
+                                        fontWeight: 600,
+                                        textAlign: 'center',
+                                        marginTop: '8px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: '6px',
+                                    }}>
+                                        ⚡ Gas-Free Deposits with Coinbase Wallet
+                                    </div>
+                                )}
                                 {/* Action Button */}
                                 {!isConnected ? (
                                     <div style={{ width: '100%' }}>
@@ -1167,7 +1196,9 @@ export default function Home() {
                                         {isLoading
                                             ? 'Processing...'
                                             : (depositAmount && parseFloat(depositAmount) > 0
-                                                ? (activeTab === 'deposit' ? 'Deposit cbBTC' : 'Withdraw cbBTC')
+                                                ? (activeTab === 'deposit'
+                                                    ? (isGasFree ? '⚡ Deposit cbBTC (Gas-Free!)' : 'Deposit cbBTC')
+                                                    : 'Withdraw cbBTC')
                                                 : 'Enter an amount'
                                             )
                                         }
