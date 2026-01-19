@@ -65,20 +65,23 @@ export function OnrampModal({ isOpen, onClose, theme, btcPrice }: OnrampModalPro
     const estimatedCbBTC = btcPrice > 0 ? (usdAmount / btcPrice).toFixed(6) : '0';
 
     // Generate Coinbase Onramp URL
+    // Using one-click Buy Widget URL format: https://docs.cdp.coinbase.com/onramp/docs/api-initializing
     const generateOnrampUrl = () => {
         if (!destinationAddress) return '';
 
-        // Coinbase Pay URL format
-        // https://pay.coinbase.com/buy/select-asset?appId=<PROJECT_ID>&destinationWallets=[{"address":"<WALLET>","assets":["cbBTC"],"supportedNetworks":["base"]}]
-        const destinationWallets = [{
-            address: destinationAddress,
-            assets: ['cbBTC'],
-            supportedNetworks: ['base'],
-        }];
-
+        // New Coinbase Onramp URL format (v2)
+        // Uses 'addresses' and 'assets' instead of deprecated 'destinationWallets'
         const params = new URLSearchParams({
             appId: CDP_PROJECT_ID,
-            destinationWallets: JSON.stringify(destinationWallets),
+            // Address where crypto will be sent
+            addresses: JSON.stringify({ [destinationAddress]: ['base'] }),
+            // Assets to show for purchase
+            assets: JSON.stringify(['cbBTC']),
+            // Default network
+            defaultNetwork: 'base',
+            // Default asset
+            defaultAsset: 'cbBTC',
+            // Preset amount
             presetFiatAmount: amount,
             fiatCurrency: 'USD',
         });

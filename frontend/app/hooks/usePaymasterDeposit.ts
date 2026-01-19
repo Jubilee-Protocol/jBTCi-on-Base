@@ -60,7 +60,6 @@ export function usePaymasterDeposit(): UsePaymasterDepositResult {
     const { address } = useAccount();
     const chainId = useChainId();
     const [callsId, setCallsId] = useState<string | null>(null);
-    const [regularTxHash, setRegularTxHash] = useState<`0x${string}` | null>(null);
 
     // Check if wallet supports paymaster (Coinbase Smart Wallet)
     const { data: capabilities } = useCapabilities({
@@ -87,13 +86,11 @@ export function usePaymasterDeposit(): UsePaymasterDepositResult {
         };
     }, [isGasFree]);
 
-    // Sponsored transaction hook (for Smart Wallets)
     const {
         writeContracts,
         isPending: isSponsoredPending,
         error: sponsoredError,
         reset: resetSponsored,
-        data: sponsoredCallsId,
     } = useWriteContracts({
         mutation: {
             onSuccess: (id) => {
@@ -212,7 +209,6 @@ export function usePaymasterDeposit(): UsePaymasterDepositResult {
         resetSponsored();
         resetRegular();
         setCallsId(null);
-        setRegularTxHash(null);
     }, [resetSponsored, resetRegular]);
 
     return {
