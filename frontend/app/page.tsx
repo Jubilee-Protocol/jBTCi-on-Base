@@ -10,6 +10,7 @@ import { useIsMiniApp, useMiniAppReady } from './hooks/useMiniApp';
 import { TutorialModal, useTutorial } from './components/TutorialModal';
 import { FASBDashboard } from './components/FASBDashboard';
 import { TreasuryMode } from './components/TreasuryMode';
+import { OnrampModal } from './components/OnrampModal';
 
 // Min deposit constant
 const MIN_DEPOSIT_BTC = 0.01;
@@ -235,6 +236,7 @@ export default function Home() {
     const [showHistory, setShowHistory] = useState(false);
     const [showFASBDashboard, setShowFASBDashboard] = useState(false);
     const [showTreasuryMode, setShowTreasuryMode] = useState(false);
+    const [showOnramp, setShowOnramp] = useState(false);
     const [txHistory, setTxHistory] = useState<TxHistoryItem[]>([]);
 
     // Mini app detection and frame readiness
@@ -755,6 +757,14 @@ export default function Home() {
                 theme={theme}
             />
 
+            {/* Onramp Modal - Buy cbBTC with Apple Pay, Google Pay, etc */}
+            <OnrampModal
+                isOpen={showOnramp}
+                onClose={() => setShowOnramp(false)}
+                theme={theme}
+                btcPrice={btcPrice}
+            />
+
             <main style={getGradientStyle(theme)} className="flex flex-col">
                 {/* Header */}
                 <header style={{
@@ -1075,14 +1085,20 @@ export default function Home() {
                                 {/* Min deposit + Get cbBTC hint */}
                                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: c.textLight, padding: '0 8px' }}>
                                     <span>Min. deposit: {MIN_DEPOSIT_BTC} BTC ≈ ${(MIN_DEPOSIT_BTC * btcPrice).toLocaleString()}</span>
-                                    <a
-                                        href="https://app.uniswap.org/swap?chain=base&outputCurrency=0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        style={{ color: '#0052FF', textDecoration: 'underline' }}
+                                    <button
+                                        onClick={() => setShowOnramp(true)}
+                                        style={{
+                                            color: '#0052FF',
+                                            textDecoration: 'underline',
+                                            background: 'none',
+                                            border: 'none',
+                                            cursor: 'pointer',
+                                            fontSize: '12px',
+                                            padding: 0,
+                                        }}
                                     >
                                         Get cbBTC →
-                                    </a>
+                                    </button>
                                 </div>
                                 <div style={{ fontSize: '10px', color: c.textLight, opacity: 0.7, textAlign: 'center', marginTop: '4px' }}>
                                     Price by <a href="https://www.coingecko.com/" target="_blank" rel="noopener noreferrer" style={{ color: c.textLight, textDecoration: 'underline' }}>CoinGecko</a>
