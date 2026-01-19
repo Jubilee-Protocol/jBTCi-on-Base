@@ -49,7 +49,7 @@ address public constant tokenizedStrategyAddress =
 |--------|--------|
 | ✅ Fixed | Updated to official Yearn deployment |
 | ✅ Verified | Testnet deposit successful (0.1 cbBTC → 0.1 jBTCi) |
-| 🔄 Pending | Mainnet redeployment |
+| ✅ Complete | Mainnet deployed: `0x27143095013184e718f92330C32A3D2eE9974053` |
 
 ---
 

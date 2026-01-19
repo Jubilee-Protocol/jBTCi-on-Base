@@ -8,7 +8,8 @@
 
 **Website**: https://jbtci.xyz  
 **App**: https://mint.jbtci.xyz  
-**Contract**: `TBD - Mainnet deployment pending`
+**Contract**: [`0x27143095013184e718f92330C32A3D2eE9974053`](https://basescan.org/address/0x27143095013184e718f92330C32A3D2eE9974053)  
+**Status**: 🚀 **LIVE on Base Mainnet** — Upgraded Jan 18, 2026
 
 ---
 
