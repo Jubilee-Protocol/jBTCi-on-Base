@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useAccount, useChainId } from 'wagmi';
-import { base } from 'wagmi/chains';
+import { useAccount } from 'wagmi';
 
 interface OnrampModalProps {
     isOpen: boolean;
@@ -11,28 +10,12 @@ interface OnrampModalProps {
     btcPrice: number;
 }
 
-// Coinbase Onramp configuration - jBTCi CDP Project
-const CDP_PROJECT_ID = '9e7b3e8f-6ede-4580-b829-77c802b3d802';
-
 // cbBTC contract on Base
 const CBBTC_ADDRESS = '0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf';
 
-// Payment method options
-const PAYMENT_METHODS = [
-    { id: 'apple_pay', name: 'Apple Pay', icon: '' },
-    { id: 'google_pay', name: 'Google Pay', icon: '🔵' },
-    { id: 'card', name: 'Debit Card', icon: '💳' },
-    { id: 'coinbase', name: 'Coinbase Account', icon: '🔷' },
-];
-
-const PRESET_AMOUNTS = [50, 100, 250, 500];
-
 export function OnrampModal({ isOpen, onClose, theme, btcPrice }: OnrampModalProps) {
     const { address, isConnected } = useAccount();
-    const chainId = useChainId();
     const [amount, setAmount] = useState<string>('100');
-    const [destinationAddress, setDestinationAddress] = useState<string>('');
-    const [isLoading, setIsLoading] = useState(false);
 
     // Theme colors
     const c = theme === 'dark' ? {
@@ -53,63 +36,20 @@ export function OnrampModal({ isOpen, onClose, theme, btcPrice }: OnrampModalPro
         success: '#22C55E',
     };
 
-    // Set destination address when connected
-    useEffect(() => {
-        if (isConnected && address) {
-            setDestinationAddress(address);
-        }
-    }, [isConnected, address]);
-
     // Calculate estimated cbBTC
     const usdAmount = parseFloat(amount) || 0;
     const estimatedCbBTC = btcPrice > 0 ? (usdAmount / btcPrice).toFixed(6) : '0';
 
-    // Generate Coinbase Onramp URL
-    // Using one-click Buy Widget URL format: https://docs.cdp.coinbase.com/onramp/docs/api-initializing
-    const generateOnrampUrl = () => {
-        if (!destinationAddress) return '';
+    const PRESET_AMOUNTS = [100, 250, 500, 1000];
 
-        // New Coinbase Onramp URL format (v2)
-        // Uses 'addresses' and 'assets' instead of deprecated 'destinationWallets'
-        const params = new URLSearchParams({
-            appId: CDP_PROJECT_ID,
-            // Address where crypto will be sent
-            addresses: JSON.stringify({ [destinationAddress]: ['base'] }),
-            // Assets to show for purchase
-            assets: JSON.stringify(['cbBTC']),
-            // Default network
-            defaultNetwork: 'base',
-            // Default asset
-            defaultAsset: 'cbBTC',
-            // Preset amount
-            presetFiatAmount: amount,
-            fiatCurrency: 'USD',
-        });
-
-        return `https://pay.coinbase.com/buy/select-asset?${params.toString()}`;
+    // Direct links - these work immediately without CDP approval
+    const handleCoinbase = () => {
+        window.open('https://www.coinbase.com/price/coinbase-wrapped-btc', '_blank');
     };
 
-    // Open Coinbase Onramp
-    const handleBuyCbBTC = () => {
-        if (!destinationAddress) {
-            alert('Please enter a destination wallet address');
-            return;
-        }
-
-        const url = generateOnrampUrl();
-        if (url) {
-            // Open in popup window
-            const width = 500;
-            const height = 700;
-            const left = (window.innerWidth - width) / 2;
-            const top = (window.innerHeight - height) / 2;
-
-            window.open(
-                url,
-                'coinbase-onramp',
-                `width=${width},height=${height},left=${left},top=${top},toolbar=no,menubar=no`
-            );
-        }
+    const handleUniswap = () => {
+        const url = `https://app.uniswap.org/swap?chain=base&outputCurrency=${CBBTC_ADDRESS}`;
+        window.open(url, '_blank');
     };
 
     if (!isOpen) return null;
@@ -163,14 +103,13 @@ export function OnrampModal({ isOpen, onClose, theme, btcPrice }: OnrampModalPro
 
                 {/* Description */}
                 <p style={{ color: c.textLight, marginBottom: '24px', lineHeight: 1.6 }}>
-                    Buy cbBTC instantly with Apple Pay, Google Pay, or debit card.
-                    No Coinbase account required for amounts up to $500/week.
+                    Get cbBTC to deposit into jBTCi. Choose your preferred method:
                 </p>
 
-                {/* Amount Input */}
-                <div style={{ marginBottom: '20px' }}>
+                {/* Amount Estimate */}
+                <div style={{ marginBottom: '24px' }}>
                     <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, color: c.text, marginBottom: '8px' }}>
-                        Amount (USD)
+                        How much do you want to deposit? (USD)
                     </label>
                     <div style={{ position: 'relative' }}>
                         <span style={{
@@ -224,92 +163,100 @@ export function OnrampModal({ isOpen, onClose, theme, btcPrice }: OnrampModalPro
                             </button>
                         ))}
                     </div>
-                </div>
 
-                {/* Estimated cbBTC */}
-                <div style={{
-                    backgroundColor: c.bg,
-                    borderRadius: '12px',
-                    padding: '16px',
-                    marginBottom: '20px',
-                }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <span style={{ color: c.textLight, fontSize: '14px' }}>You'll receive approximately</span>
-                        <span style={{ color: c.text, fontSize: '18px', fontWeight: 600 }}>
-                            {estimatedCbBTC} cbBTC
-                        </span>
-                    </div>
-                    <div style={{ fontSize: '12px', color: c.textLight, marginTop: '4px' }}>
-                        ≈ {estimatedCbBTC} jBTCi after deposit
-                    </div>
-                </div>
-
-                {/* Destination Address */}
-                <div style={{ marginBottom: '24px' }}>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, color: c.text, marginBottom: '8px' }}>
-                        Destination Wallet
-                    </label>
-                    <input
-                        type="text"
-                        value={destinationAddress}
-                        onChange={(e) => setDestinationAddress(e.target.value)}
-                        placeholder="0x... or connect wallet"
-                        style={{
-                            width: '100%',
-                            padding: '14px 16px',
-                            fontSize: '14px',
-                            border: `1px solid ${c.border}`,
-                            borderRadius: '12px',
-                            backgroundColor: c.bg,
-                            color: c.text,
-                            outline: 'none',
-                            fontFamily: 'monospace',
-                        }}
-                    />
-                    {isConnected && (
-                        <div style={{ fontSize: '12px', color: c.success, marginTop: '6px' }}>
-                            ✓ Connected wallet detected
+                    {/* Estimate */}
+                    <div style={{
+                        backgroundColor: c.bg,
+                        borderRadius: '12px',
+                        padding: '16px',
+                        marginTop: '16px',
+                    }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <span style={{ color: c.textLight, fontSize: '14px' }}>You'll need approximately</span>
+                            <span style={{ color: c.text, fontSize: '18px', fontWeight: 600 }}>
+                                {estimatedCbBTC} cbBTC
+                            </span>
                         </div>
-                    )}
+                    </div>
                 </div>
 
-                {/* Payment Methods Info */}
-                <div style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    gap: '16px',
-                    marginBottom: '24px',
-                    padding: '12px',
-                    backgroundColor: c.bg,
-                    borderRadius: '12px',
-                }}>
-                    <span style={{ fontSize: '24px' }}></span>
-                    <span style={{ fontSize: '24px' }}>🔵</span>
-                    <span style={{ fontSize: '24px' }}>💳</span>
-                    <span style={{ color: c.textLight, fontSize: '12px', alignSelf: 'center' }}>
-                        Apple Pay • Google Pay • Debit Card
-                    </span>
-                </div>
-
-                {/* Buy Button */}
+                {/* Option 1: Coinbase */}
                 <button
-                    onClick={handleBuyCbBTC}
-                    disabled={!destinationAddress || usdAmount < 1}
+                    onClick={handleCoinbase}
                     style={{
                         width: '100%',
-                        padding: '18px',
-                        fontSize: '16px',
-                        fontWeight: 600,
+                        padding: '16px 20px',
+                        marginBottom: '12px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
                         backgroundColor: c.accent,
                         color: '#ffffff',
                         border: 'none',
                         borderRadius: '12px',
-                        cursor: destinationAddress && usdAmount >= 1 ? 'pointer' : 'not-allowed',
-                        opacity: destinationAddress && usdAmount >= 1 ? 1 : 0.5,
+                        cursor: 'pointer',
+                        fontSize: '16px',
+                        fontWeight: 600,
                     }}
                 >
-                    Buy cbBTC with Coinbase
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <span style={{ fontSize: '24px' }}>🏦</span>
+                        <div style={{ textAlign: 'left' }}>
+                            <div>Buy on Coinbase</div>
+                            <div style={{ fontSize: '12px', opacity: 0.8, fontWeight: 400 }}>
+                                Apple Pay • Cards • Bank Transfer
+                            </div>
+                        </div>
+                    </div>
+                    <span>→</span>
                 </button>
+
+                {/* Option 2: Uniswap */}
+                <button
+                    onClick={handleUniswap}
+                    style={{
+                        width: '100%',
+                        padding: '16px 20px',
+                        marginBottom: '24px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        backgroundColor: 'transparent',
+                        color: c.text,
+                        border: `1px solid ${c.border}`,
+                        borderRadius: '12px',
+                        cursor: 'pointer',
+                        fontSize: '16px',
+                        fontWeight: 600,
+                    }}
+                >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <span style={{ fontSize: '24px' }}>🦄</span>
+                        <div style={{ textAlign: 'left' }}>
+                            <div>Swap on Uniswap</div>
+                            <div style={{ fontSize: '12px', color: c.textLight, fontWeight: 400 }}>
+                                ETH or any token → cbBTC
+                            </div>
+                        </div>
+                    </div>
+                    <span>→</span>
+                </button>
+
+                {/* Connected wallet info */}
+                {isConnected && address && (
+                    <div style={{
+                        fontSize: '12px',
+                        color: c.success,
+                        textAlign: 'center',
+                        padding: '12px',
+                        backgroundColor: `${c.success}15`,
+                        borderRadius: '8px',
+                    }}>
+                        ✓ Wallet connected: {address.slice(0, 6)}...{address.slice(-4)}
+                        <br />
+                        <span style={{ color: c.textLight }}>cbBTC will be sent to this address</span>
+                    </div>
+                )}
 
                 {/* Footer */}
                 <div style={{
@@ -319,9 +266,7 @@ export function OnrampModal({ isOpen, onClose, theme, btcPrice }: OnrampModalPro
                     color: c.textLight,
                     lineHeight: 1.6,
                 }}>
-                    Powered by <a href="https://www.coinbase.com/developer-platform" target="_blank" rel="noopener noreferrer" style={{ color: c.accent }}>Coinbase</a>
-                    <br />
-                    Guest checkout available for US users ($500/week limit)
+                    After getting cbBTC, return here to deposit into jBTCi
                 </div>
             </div>
         </div>

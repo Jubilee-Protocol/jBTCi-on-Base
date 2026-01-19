@@ -394,11 +394,23 @@ export default function Home() {
     }, [isRedeemSuccess]);
 
     useEffect(() => {
-        if (isApproveSuccess && depositAmount) {
-            // Refetch allowance BEFORE attempting deposit
+        if (isApproveSuccess && depositAmount && address) {
+            // IMPORTANT: After approval succeeds, we MUST reset and directly deposit
+            // DO NOT call handleDeposit() as it will re-check allowance which may be stale
+            setToast({ message: 'Approval confirmed! Now depositing...', type: 'pending' });
+
+            // Reset the approval state to prevent loops
+            resetApprove();
+
+            // Refetch allowance for next time, then deposit directly
             refetchAllowance().then(() => {
-                // Small delay to ensure state is updated
-                setTimeout(() => handleDeposit(), 500);
+                const amountWei = parseUnits(depositAmount, 8);
+                depositAssets({
+                    address: strategyAddress,
+                    abi: STRATEGY_ABI,
+                    functionName: 'deposit',
+                    args: [amountWei, address],
+                } as any);
             });
         }
     }, [isApproveSuccess]);
