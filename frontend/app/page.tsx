@@ -257,6 +257,9 @@ export default function Home() {
     // Tutorial for first-time visitors
     const { showTutorial, completeTutorial, reopenTutorial } = useTutorial();
 
+    // Migration notice dismissible state
+    const [showMigrationNotice, setShowMigrationNotice] = useState(true);
+
     // Check if wallet supports gas sponsorship (Coinbase Smart Wallet)
     const { data: capabilities } = useCapabilities({ account: address });
     const isGasFree = useMemo(() => {
@@ -904,41 +907,62 @@ export default function Home() {
                                 </div>
                             )}
 
-                            {/* v1.5 Migration Notice */}
-                            <div style={{
-                                background: 'linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%)',
-                                border: '1px solid #3B82F6',
-                                borderRadius: '12px',
-                                padding: '16px',
-                                marginBottom: '24px',
-                                display: 'flex',
-                                alignItems: 'flex-start',
-                                gap: '12px'
-                            }}>
-                                <span style={{ fontSize: '20px' }}>🚀</span>
-                                <div>
-                                    <div style={{ fontWeight: '600', color: '#1E40AF', marginBottom: '4px' }}>
-                                        jBTCi Upgraded to v1.5!
-                                    </div>
-                                    <div style={{ fontSize: '13px', color: '#1E3A8A', lineHeight: '1.4' }}>
-                                        {MIGRATION_NOTICE}
-                                    </div>
-                                    <a
-                                        href={`https://basescan.org/address/${OLD_CONTRACT}#writeContract`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
+                            {/* v1.5 Migration Notice - Dismissible */}
+                            {showMigrationNotice && (
+                                <div style={{
+                                    background: 'linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%)',
+                                    border: '1px solid #3B82F6',
+                                    borderRadius: '12px',
+                                    padding: '16px',
+                                    marginBottom: '24px',
+                                    display: 'flex',
+                                    alignItems: 'flex-start',
+                                    gap: '12px',
+                                    position: 'relative'
+                                }}>
+                                    <button
+                                        onClick={() => setShowMigrationNotice(false)}
                                         style={{
-                                            fontSize: '12px',
-                                            color: '#2563EB',
-                                            textDecoration: 'underline',
-                                            marginTop: '8px',
-                                            display: 'inline-block'
+                                            position: 'absolute',
+                                            top: '8px',
+                                            right: '8px',
+                                            background: 'none',
+                                            border: 'none',
+                                            cursor: 'pointer',
+                                            fontSize: '18px',
+                                            color: '#1E40AF',
+                                            padding: '4px',
+                                            lineHeight: 1
                                         }}
+                                        aria-label="Dismiss notice"
                                     >
-                                        Withdraw from old contract →
-                                    </a>
+                                        ×
+                                    </button>
+                                    <span style={{ fontSize: '20px' }}>🚀</span>
+                                    <div style={{ paddingRight: '24px' }}>
+                                        <div style={{ fontWeight: '600', color: '#1E40AF', marginBottom: '4px' }}>
+                                            jBTCi Upgraded to v1.5!
+                                        </div>
+                                        <div style={{ fontSize: '13px', color: '#1E3A8A', lineHeight: '1.4' }}>
+                                            {MIGRATION_NOTICE}
+                                        </div>
+                                        <a
+                                            href={`https://basescan.org/address/${OLD_CONTRACT}#writeContract`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            style={{
+                                                fontSize: '12px',
+                                                color: '#2563EB',
+                                                textDecoration: 'underline',
+                                                marginTop: '8px',
+                                                display: 'inline-block'
+                                            }}
+                                        >
+                                            Withdraw from old contract →
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
+                            )}
 
                             {/* Tabs */}
                             <div style={{ display: 'flex', gap: '32px', marginBottom: '32px', borderBottom: `1px solid ${c.cardBorder}`, paddingBottom: '16px' }}>
