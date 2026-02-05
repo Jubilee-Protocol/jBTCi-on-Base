@@ -82,6 +82,13 @@ const STRATEGY_ABI = [
         inputs: [{ name: 'shares', type: 'uint256' }],
         outputs: [{ name: 'assets', type: 'uint256' }]
     },
+    {
+        name: 'depositCap',
+        type: 'function',
+        stateMutability: 'view',
+        inputs: [],
+        outputs: [{ type: 'uint256' }]
+    },
 ] as const;
 
 const ERC20_ABI = [
@@ -492,6 +499,14 @@ export default function Home() {
         abi: STRATEGY_ABI,
         functionName: 'getStrategyStatus',
     });
+
+    // Read deposit cap
+    const { data: depositCapRaw } = useReadContract({
+        address: strategyAddress,
+        abi: STRATEGY_ABI,
+        functionName: 'depositCap',
+    });
+    const depositCap = depositCapRaw ? Number(formatUnits(depositCapRaw, 8)) : 100;
 
     const { data: cbBTCBalance, refetch: refetchCbBTC } = useReadContract({
         address: cbBTCAddress,
@@ -1309,6 +1324,10 @@ export default function Home() {
                                             : `${totalHoldings.toFixed(4)} BTC`
                                     )}
                                 </div>
+                            </div>
+                            <div style={{ background: c.card, borderRadius: '12px', padding: '12px', textAlign: 'center', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', border: `1px solid ${c.cardBorder}` }}>
+                                <div style={{ fontSize: '10px', color: c.textLight, textTransform: 'uppercase', marginBottom: '4px' }}>Deposit Cap</div>
+                                <div style={{ fontSize: '14px', fontWeight: '600', color: '#22C55E' }}>{depositCap} BTC</div>
                             </div>
                             <div style={{ background: c.card, borderRadius: '12px', padding: '12px', textAlign: 'center', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', border: `1px solid ${c.cardBorder}` }}>
                                 <div style={{ fontSize: '10px', color: c.textLight, textTransform: 'uppercase', marginBottom: '4px' }}>APY</div>
