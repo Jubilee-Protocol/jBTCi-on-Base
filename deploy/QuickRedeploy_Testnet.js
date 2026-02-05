@@ -59,7 +59,7 @@ async function main() {
     // Deploy only the strategy
     console.log("⏳ Deploying YearnJBTCiStrategy (fixed version)...");
 
-    const STRATEGY_NAME = "Jubilee Bitcoin Index (Testnet v2 - Bug Fix)";
+    const STRATEGY_NAME = "Jubilee Bitcoin Index (Testnet v2.0.0)";
 
     const YearnJBTCiStrategy = await getFactory("contracts/YearnJBTCiStrategy.sol:YearnJBTCiStrategy");
 

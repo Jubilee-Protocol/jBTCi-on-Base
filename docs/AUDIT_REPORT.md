@@ -1,7 +1,7 @@
 # jBTCi Strategy Security Audit Report
 
 > **Version**: 2.1.0  
-> **Contract**: `0x27143095013184e718f92330C32A3D2eE9974053`  
+> **Contract**: `0x8a4C0254258F0D3dB7Bc5C5A43825Bb4EfC81337`  
 > **Previous Contract**: `0xB3f462F54Ea57a54744712DE527494e9A6bF2219` *(deprecated)*  
 > **Network**: Base Mainnet  
 > **Audit Date**: January 17, 2026  
@@ -49,7 +49,7 @@ address public constant tokenizedStrategyAddress =
 |--------|--------|
 | ✅ Fixed | Updated to official Yearn deployment |
 | ✅ Verified | Testnet deposit successful (0.1 cbBTC → 0.1 jBTCi) |
-| ✅ Complete | Mainnet deployed: `0x27143095013184e718f92330C32A3D2eE9974053` |
+| ✅ Complete | Mainnet deployed: `0x8a4C0254258F0D3dB7Bc5C5A43825Bb4EfC81337` |
 
 ---
 

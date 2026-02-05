@@ -46,7 +46,7 @@ export const config = createConfig({
 export const CONTRACTS = {
     // Base Mainnet (LIVE!) - REDEPLOYED Jan 17 2026 (TokenizedStrategy fix)
     mainnet: {
-        strategy: '0x27143095013184e718f92330C32A3D2eE9974053', // jBTCi Strategy - TokenizedStrategy fix!
+        strategy: '0x8a4C0254258F0D3dB7Bc5C5A43825Bb4EfC81337', // jBTCi Strategy - TokenizedStrategy fix!
         vault: '0x0000000000000000000000000000000000000000',    // Not needed, strategy IS the vault
         cbBTC: '0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf',
         wBTC: '0x0555E30da8f98308EdB960aa94C0Db47230d2B9c',

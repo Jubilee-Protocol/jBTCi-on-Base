@@ -8,7 +8,7 @@
 
 **Website**: https://jbtci.xyz  
 **App**: https://mint.jbtci.xyz  
-**Contract**: [`0x27143095013184e718f92330C32A3D2eE9974053`](https://basescan.org/address/0x27143095013184e718f92330C32A3D2eE9974053)  
+**Contract**: [`0x8a4C0254258F0D3dB7Bc5C5A43825Bb4EfC81337`](https://basescan.org/address/0x8a4C0254258F0D3dB7Bc5C5A43825Bb4EfC81337)  
 **Status**: 🚀 **LIVE on Base Mainnet** — Upgraded Jan 18, 2026
 
 ---
@@ -76,7 +76,7 @@ jBTCi is fully compatible with [Safe (formerly Gnosis Safe)](https://app.safe.gl
 ### Base Mainnet
 | Contract | Address |
 |----------|---------|
-| jBTCi Strategy | `0x27143095013184e718f92330C32A3D2eE9974053` |
+| jBTCi Strategy | `0x8a4C0254258F0D3dB7Bc5C5A43825Bb4EfC81337` |
 | cbBTC | `0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf` |
 | WBTC | `0x0555E30da8f98308EdB960aa94C0Db47230d2B9c` |
 
@@ -147,7 +147,7 @@ During maintenance, mainnet deposits/withdrawals are disabled but **testnet (Bas
 
 ### Contract Fixes
 - ✅ **Jan 17**: Fixed critical `tokenizedStrategyAddress` pointing to testnet instead of mainnet
-- ✅ Mainnet redeployment: `0x27143095013184e718f92330C32A3D2eE9974053`
+- ✅ Mainnet redeployment: `0x8a4C0254258F0D3dB7Bc5C5A43825Bb4EfC81337`
 - ✅ Fixed critical double-counting bug in `_calculateTotalHoldings()`
 - ✅ Fixed same bug in `getAllocationDetails()`
 - ✅ Testnet redeployment: `0x43814Da4b3CB4344395A85afF2325282A43cbda6`

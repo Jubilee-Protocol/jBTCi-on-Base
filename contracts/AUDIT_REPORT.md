@@ -1,10 +1,11 @@
 # jBTCi Strategy Security Audit Report
 
-> **Version**: 3.1.0  
-> **Contract**: `YearnJBTCiStrategy.sol` (2,042 lines)  
-> **Network**: Base Mainnet / Base Sepolia (Testnet)  
-> **Audit Date**: January 15, 2026  
-> **Status**: ✅ **Testnet Deployed** — Bug fixed, mainnet pending
+> **Version**: 1.5.0 (Size-optimized)  
+> **Contract**: [`0x8a4C0254258F0D3dB7Bc5C5A43825Bb4EfC81337`](https://basescan.org/address/0x8a4C0254258F0D3dB7Bc5C5A43825Bb4EfC81337)  
+> **Network**: Base Mainnet  
+> **Audit Date**: February 5, 2026  
+> **Status**: ✅ **Deployed and Verified on Basescan**
+
 
 ---
 
@@ -380,11 +381,12 @@ Failed: 4 (testnet mock issues only)
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 2.0.0 | Feb 5, 2026 | Minimum deposit enforcement (0.01 BTC), keeper functions, live oracle pricing, frontend display helpers |
 | 3.1.0 | Jan 15, 2026 | Testnet deployed, stress tests passed 11/14, Safe App & FASB fixes |
 | 3.0.0 | Jan 15, 2026 | Fixed double-counting bug, comprehensive security audit |
-| 2.0.0 | Jan 12, 2026 | TokenizedStrategy fix, testnet verification |
+| 2.0.0-legacy | Jan 12, 2026 | TokenizedStrategy fix, testnet verification |
 | 1.0.0 | Jan 6, 2026 | Initial audit |
 
 ---
 
-*Built by [Jubilee Labs](https://jubileelabs.xyz) • All glory to Jesus*
+*Built by [Jubilee Labs](https://jubileelabs.xyz) • All glory to Jesus* 

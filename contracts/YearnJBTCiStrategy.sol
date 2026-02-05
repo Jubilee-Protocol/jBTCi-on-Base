@@ -267,6 +267,31 @@ contract YearnJBTCiStrategy is BaseStrategy, ReentrancyGuard {
     uint256 public totalSwapsFailed;
 
     // ========================================================================
+    //                    STATE VARIABLES - MINIMUM DEPOSIT
+    // ========================================================================
+
+    /// @notice Minimum deposit required for rebalancing to activate
+    uint256 public minimumDeposit = 0.01e8; // 0.01 BTC
+    /// @notice Absolute minimum allowed for minimumDeposit setting
+    uint256 public constant MIN_ALLOWED_DEPOSIT = 0.001e8; // 0.001 BTC
+    /// @notice Maximum allowed for minimumDeposit setting
+    uint256 public constant MAX_ALLOWED_DEPOSIT = 10e8; // 10 BTC
+
+    // ========================================================================
+    //                    STATE VARIABLES - KEEPER
+    // ========================================================================
+
+    /// @notice Keeper address for automated rebalancing
+    address public keeper;
+
+    // ========================================================================
+    //                    FRONTEND DISPLAY CONSTANTS
+    // ========================================================================
+
+    string public constant STRATEGY_NAME = "jBTCi - Bitcoin Index Fund";
+    string public constant STRATEGY_VERSION = "2.0.0";
+    uint8 public constant DISPLAY_DECIMALS = 8;
+    // ========================================================================
     //                            CONSTANTS
     // ========================================================================
 
@@ -409,6 +434,18 @@ contract YearnJBTCiStrategy is BaseStrategy, ReentrancyGuard {
         uint256 positionSize,
         uint256 allocWBTC,
         uint256 allocCBBTC
+    );
+
+    // v2.0.0 Events
+    event MinimumDepositUpdated(
+        uint256 oldMin,
+        uint256 newMin,
+        uint256 timestamp
+    );
+    event KeeperUpdated(
+        address indexed oldKeeper,
+        address indexed newKeeper,
+        uint256 timestamp
     );
 
     // ========================================================================
@@ -616,7 +653,17 @@ contract YearnJBTCiStrategy is BaseStrategy, ReentrancyGuard {
         uint256 positionSize = _calculateTotalHoldings();
         uint256 effectiveCap = Math.min(depositCap, maxPositionSize);
 
-        return positionSize >= effectiveCap ? 0 : effectiveCap - positionSize;
+        // Normal operation: check against cap
+        if (positionSize >= effectiveCap) return 0;
+
+        uint256 available = effectiveCap - positionSize;
+
+        // For first deposit, enforce minimum
+        if (positionSize == 0 && available < minimumDeposit) {
+            return 0; // Don't accept deposits below minimum for new vaults
+        }
+
+        return available;
     }
 
     function availableWithdrawLimit(
@@ -1481,6 +1528,67 @@ contract YearnJBTCiStrategy is BaseStrategy, ReentrancyGuard {
     }
 
     // ========================================================================
+    //                        KEEPER AUTOMATION NOTICE
+    // ========================================================================
+    //
+    // Keeper wrapper functions (executeRebalanceKeeper, canRebalance,
+    // getRebalanceStatus) were removed in v1.5 to comply with EIP-170
+    // contract size limit (24,576 bytes).
+    //
+    // For keeper automation:
+    // - Use Gelato/Tenderly to call tend() directly
+    // - Core rebalancing logic in _executeRebalance() remains intact
+    // - Factory deployment (JBTCiFactory) was explored but EVM enforces
+    //   size limit at CREATE/CREATE2 opcode level, not just estimateGas
+    //
+    // ========================================================================
+
+    /**
+     * @notice Get strategy info for frontend display
+     * @dev Uses live oracle price for USD conversion
+     * @return name Strategy name
+     * @return version Strategy version
+     * @return tvl Total value locked (in asset decimals, 8 decimals)
+     * @return tvlUSD Total value in USD (from oracle, 8 decimals)
+     * @return minDeposit Minimum deposit required (8 decimals)
+     * @return minDepositUSD Minimum deposit in USD (from oracle)
+     * @return maxDeposit Maximum total deposits allowed (8 decimals)
+     * @return wbtcAllocation Current WBTC allocation in basis points
+     * @return cbbtcAllocation Current cbBTC allocation in basis points
+     */
+    function getStrategyInfo()
+        external
+        view
+        returns (
+            string memory name,
+            string memory version,
+            uint256 tvl,
+            uint256 tvlUSD,
+            uint256 minDeposit,
+            uint256 minDepositUSD,
+            uint256 maxDeposit,
+            uint256 wbtcAllocation,
+            uint256 cbbtcAllocation
+        )
+    {
+        name = STRATEGY_NAME;
+        version = STRATEGY_VERSION;
+        tvl = _calculateTotalHoldings();
+        minDeposit = minimumDeposit;
+        maxDeposit = Math.min(depositCap, maxPositionSize);
+        (wbtcAllocation, cbbtcAllocation) = _getCurrentAllocations();
+
+        // Get live BTC price from oracle for USD conversion
+        try this.getBTCPrice() returns (uint256 btcPrice) {
+            tvlUSD = (tvl * btcPrice) / 1e8;
+            minDepositUSD = (minDeposit * btcPrice) / 1e8;
+        } catch {
+            tvlUSD = 0;
+            minDepositUSD = 0;
+        }
+    }
+
+    // ========================================================================
     //                    MANAGEMENT & ADMIN FUNCTIONS (CONTINUED)
     // ========================================================================
 
@@ -1602,6 +1710,29 @@ contract YearnJBTCiStrategy is BaseStrategy, ReentrancyGuard {
             minArbitrageProfit,
             block.timestamp
         );
+    }
+
+    /**
+     * @notice Set keeper address for automated rebalancing
+     * @param _keeper Address of the keeper
+     */
+    function setKeeper(address _keeper) external onlyManagement {
+        if (_keeper == address(0)) revert ZeroAddress();
+        address oldKeeper = keeper;
+        keeper = _keeper;
+        emit KeeperUpdated(oldKeeper, _keeper, block.timestamp);
+    }
+
+    /**
+     * @notice Set minimum deposit amount
+     * @param _minDeposit New minimum deposit in BTC (8 decimals)
+     */
+    function setMinimumDeposit(uint256 _minDeposit) external onlyManagement {
+        if (_minDeposit < MIN_ALLOWED_DEPOSIT) revert BelowMinimum();
+        if (_minDeposit > MAX_ALLOWED_DEPOSIT) revert ExceedsMaximum();
+        uint256 oldMin = minimumDeposit;
+        minimumDeposit = _minDeposit;
+        emit MinimumDepositUpdated(oldMin, _minDeposit, block.timestamp);
     }
 
     // ========================================================================

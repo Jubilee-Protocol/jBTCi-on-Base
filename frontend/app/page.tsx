@@ -1281,7 +1281,7 @@ export default function Home() {
                             <span style={{ color: isMaintenanceMode ? '#F59E0B' : (strategyStatus?.isPaused ? '#EF4444' : '#22C55E') }}>
                                 ● {isMaintenanceMode ? 'Maintenance' : (strategyStatus?.isPaused ? 'Paused' : 'Active')}
                             </span>
-                            <a href="https://basescan.org/address/0x27143095013184e718f92330C32A3D2eE9974053" target="_blank" rel="noopener noreferrer" style={{ color: c.textLight }}>
+                            <a href="https://basescan.org/address/0x8a4C0254258F0D3dB7Bc5C5A43825Bb4EfC81337" target="_blank" rel="noopener noreferrer" style={{ color: c.textLight }}>
                                 Contract ↗
                             </a>
                             <a href="https://github.com/Jubilee-Protocol/jBTCi-on-Base/blob/main/docs/AUDIT_REPORT.md" target="_blank" rel="noopener noreferrer" style={{ color: c.textLight }}>

@@ -15,7 +15,7 @@ contract MockRouter {
         uint256 amountOutMin,
         address[] calldata path,
         address to,
-        uint256 deadline
+        uint256 /* deadline */
     ) external returns (uint256[] memory amounts) {
         require(path.length >= 2, "Invalid path");
 

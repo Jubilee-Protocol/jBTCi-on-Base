@@ -21,7 +21,7 @@ import { base } from 'wagmi/chains';
 const PAYMASTER_URL = 'https://api.developer.coinbase.com/rpc/v1/base/He4qXOZocLjfeXoi7qgRSdbeEZ7mqXHs';
 
 // Contract addresses
-const STRATEGY_ADDRESS = '0x27143095013184e718f92330C32A3D2eE9974053' as const;
+const STRATEGY_ADDRESS = '0x8a4C0254258F0D3dB7Bc5C5A43825Bb4EfC81337' as const;
 const CBBTC_ADDRESS = '0xcbB7C0000aB88B473b1f5aFd9ef808440eed33Bf' as const;
 
 // Simplified ABIs for the calls we need

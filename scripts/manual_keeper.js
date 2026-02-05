@@ -10,7 +10,7 @@
 const { ethers } = require("ethers");
 require("dotenv").config();
 
-const STRATEGY_ADDRESS = "0x27143095013184e718f92330C32A3D2eE9974053";
+const STRATEGY_ADDRESS = "0x8a4C0254258F0D3dB7Bc5C5A43825Bb4EfC81337";
 
 const ABI = [
     "function report() external returns (uint256 profit, uint256 loss)",

@@ -124,6 +124,27 @@ async function main() {
     const poolCbbtcUsdcAddr = await poolCbbtcUsdc.getAddress();
     console.log("  ✅ Mock cbBTC/USDC Pool:", poolCbbtcUsdcAddr);
 
+    // DEBUG: Verify pool tokens before strategy deployment
+    console.log("\n🔍 DEBUG: Verifying pool token assignments...");
+    const poolAbi = ["function token0() view returns (address)", "function token1() view returns (address)"];
+
+    const poolWbtcEthContract = new ethers.Contract(poolWbtcEthAddr, poolAbi, provider);
+    const poolCbbtcUsdcContract = new ethers.Contract(poolCbbtcUsdcAddr, poolAbi, provider);
+
+    const wbtcEth_t0 = await poolWbtcEthContract.token0();
+    const wbtcEth_t1 = await poolWbtcEthContract.token1();
+    console.log("  WBTC/ETH Pool - token0:", wbtcEth_t0);
+    console.log("  WBTC/ETH Pool - token1:", wbtcEth_t1);
+    console.log("  Expected WBTC:", wbtcAddr);
+    console.log("  WBTC match?", wbtcEth_t0.toLowerCase() === wbtcAddr.toLowerCase() || wbtcEth_t1.toLowerCase() === wbtcAddr.toLowerCase() ? "✅ YES" : "❌ NO");
+
+    const cbbtcUsdc_t0 = await poolCbbtcUsdcContract.token0();
+    const cbbtcUsdc_t1 = await poolCbbtcUsdcContract.token1();
+    console.log("  cbBTC/USDC Pool - token0:", cbbtcUsdc_t0);
+    console.log("  cbBTC/USDC Pool - token1:", cbbtcUsdc_t1);
+    console.log("  Expected cbBTC:", cbbtcAddr);
+    console.log("  cbBTC match?", cbbtcUsdc_t0.toLowerCase() === cbbtcAddr.toLowerCase() || cbbtcUsdc_t1.toLowerCase() === cbbtcAddr.toLowerCase() ? "✅ YES" : "❌ NO");
+
 
     // ============================================
     // 5. DEPLOY STRATEGY
@@ -131,7 +152,7 @@ async function main() {
     console.log("\n⏳ Deploying YearnJBTCiStrategy...");
     console.log("  Using TokenizedStrategy impl:", await provider.getCode("0x4FEFcCf08c65AD172C57b62d046edd838e1f1d69").then(c => c.length > 2 ? "✅ Found" : "❌ Missing"));
 
-    const STRATEGY_NAME = "Jubilee Bitcoin Index (Testnet)";
+    const STRATEGY_NAME = "Jubilee Bitcoin Index (Testnet v2.0.0)";
 
     const YearnJBTCiStrategy = await getFactory("contracts/YearnJBTCiStrategy.sol:YearnJBTCiStrategy");
     const strategy = await YearnJBTCiStrategy.deploy(

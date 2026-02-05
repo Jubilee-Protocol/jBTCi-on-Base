@@ -31,8 +31,8 @@ async function main() {
     const balance = await provider.getBalance(deployer.address);
     console.log(`Balance: ${ethers.formatEther(balance)} ETH\n`);
 
-    if (balance < ethers.parseEther("0.005")) {
-        throw new Error("Insufficient ETH for deployment! Need at least 0.005 ETH");
+    if (balance < ethers.parseEther("0.00005")) {
+        throw new Error("Insufficient ETH for deployment! Need at least 0.00005 ETH");
     }
 
     // Helper to get factory

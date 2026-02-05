@@ -23,7 +23,7 @@ const config = {
         runs: 1,
       },
       evmVersion: "cancun",
-      viaIR: true,
+      viaIR: true,  // Required for stack depth
     },
   },
   zksolc: {
