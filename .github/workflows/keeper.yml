@@ -1,0 +1,42 @@
+name: jBTCi Keeper (Rebalancer)
+
+# Runs every 6 hours at market-aligned times
+# Schedule: 00:00, 06:00, 12:00, 18:00 UTC
+on:
+  schedule:
+    - cron: '0 0,6,12,18 * * *'  # Every 6 hours
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  rebalance:
+    name: Check & Rebalance
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Keeper
+        env:
+          PRIVATE_KEY: ${{ secrets.KEEPER_PRIVATE_KEY }}
+          BASE_RPC_URL: ${{ secrets.BASE_RPC_URL }}
+        run: node scripts/keeper_ci.js
+
+      - name: Post status to Slack (optional)
+        if: failure()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          text: 'jBTCi Keeper failed! Check GitHub Actions.'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        continue-on-error: true
