@@ -42,9 +42,31 @@ export function OnrampModal({ isOpen, onClose, theme, btcPrice }: OnrampModalPro
 
     const PRESET_AMOUNTS = [100, 250, 500, 1000];
 
-    // Direct links - these work immediately without CDP approval
+    // Coinbase Onramp - direct to cbBTC purchase on Base
     const handleCoinbase = () => {
-        window.open('https://www.coinbase.com/price/coinbase-wrapped-btc', '_blank');
+        // Build Coinbase Onramp URL with parameters per docs:
+        // https://docs.cdp.coinbase.com/onramp-&-offramp/onramp-apis/generating-onramp-url
+        const params = new URLSearchParams({
+            appId: 'jbtci',
+            defaultAsset: 'CBBTC',
+            defaultNetwork: 'base',
+            presetFiatAmount: amount || '100',
+            fiatCurrency: 'USD',
+        });
+
+        // Add destination wallet if connected
+        if (address) {
+            // destinationWallets format: JSON array of {address, assets, blockchains}
+            const destinationWallets = JSON.stringify([{
+                address: address,
+                blockchains: ['base'],
+                assets: ['CBBTC']
+            }]);
+            params.set('destinationWallets', destinationWallets);
+        }
+
+        const url = `https://pay.coinbase.com/buy/select-asset?${params.toString()}`;
+        window.open(url, '_blank');
     };
 
     const handleUniswap = () => {
