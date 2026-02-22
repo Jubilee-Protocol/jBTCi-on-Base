@@ -2,7 +2,7 @@
 
 [![Built on Base](https://img.shields.io/badge/Built%20on-Base-blue)](https://base.org)
 [![Powered by Yearn](https://img.shields.io/badge/Powered%20by-Yearn%20V3-purple)](https://yearn.fi)
-[![App](https://img.shields.io/badge/App-mint.jbtci.xyz-pink)](https://mint.jbtci.xyz)
+[![Donate Crypto](https://img.shields.io/badge/Donate-Crypto-f7931a?logo=bitcoin&logoColor=white)](https://commerce.coinbase.com/checkout/122a2979-e559-44b9-bb9d-2ff0c6a3025b)
 
 > A passive, diversified Bitcoin strategy that automatically rebalances between WBTC and cbBTC while capturing arbitrage opportunities.
 
